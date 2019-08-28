@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Laravel on Blog</title>
+		<link>https://joshuachp.dev/tags/laravel/</link>
+		<description>Recent content in Laravel on Blog</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<atom:link href="https://joshuachp.dev/tags/laravel/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CORS Laravel</title>
+				<link>https://joshuachp.dev/posts/2019-10-02_cors_laravel/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/posts/2019-10-02_cors_laravel/</guid>
+				<description>&lt;h1 id=&#34;cors-laravel&#34;&gt;CORS Laravel&lt;/h1&gt;&#xA;&lt;p&gt;I want to talk about the problems that I have encountered setting up CORS between a Laravel backend&#xA;server and a simple Html frontend hosted on a different domain, using the fetch API.&lt;/p&gt;&#xA;&lt;h2 id=&#34;what-is-cors&#34;&gt;What is CORS&lt;/h2&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;Cross-Origin Resource Sharing (CORS)&lt;/strong&gt; is a mechanism that uses HTTP headers to tell browsers to&#xA;give a web application running at one origin, access to selected resources from a different&#xA;origin. A web application executes a cross-origin HTTP request when it requests a resource that&#xA;has a different origin (domain, protocol, or port) from its own.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

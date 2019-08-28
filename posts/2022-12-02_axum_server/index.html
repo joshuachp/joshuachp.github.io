@@ -1,0 +1,228 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Axum Server | Blog</title>
+<meta name="description" content="Implementing a Web Server in Rust using axum" />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2022-12-02_axum_server/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="axum-server">Axum Server</h1>
+<p>Install required dependencies</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cargo add axum
+</span></span><span style="display:flex;"><span>cargo add hyper --features<span style="color:#f92672">=</span>full
+</span></span><span style="display:flex;"><span>cargo add tokio --features<span style="color:#f92672">=</span>full
+</span></span><span style="display:flex;"><span>cargo add toker
+</span></span></code></pre></div><p>Lets create a new function that will return the <code>axum::routing::Router</code>. This will be the core of
+our server.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">app</span>() -&gt; <span style="color:#a6e22e">Router</span> {
+</span></span><span style="display:flex;"><span>    Router::new().route(<span style="color:#e6db74">&#34;/&#34;</span>, get(<span style="color:#f92672">||</span> <span style="color:#66d9ef">async</span> { <span style="color:#e6db74">&#34;Hello, World!&#34;</span> }))
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Creating a function that returns the <code>Router</code> will help us later to test our application.</p>
+<p>Add the tokio config to the main function.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ...
+</span></span></span></code></pre></div><p>Create the socket address we will listen on.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs fn main()
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> address <span style="color:#f92672">=</span> SocketAddr::new(IpAddr::V4(Ipv4Addr::new(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)), <span style="color:#ae81ff">8080</span>);
+</span></span></code></pre></div><p>And bind the address to our application.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs fn main()
+</span></span></span><span style="display:flex;"><span>axum::Server::bind(<span style="color:#f92672">&amp;</span>address)
+</span></span><span style="display:flex;"><span>    .serve(app().into_make_service())
+</span></span><span style="display:flex;"><span>    .<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>    .unwrap();
+</span></span></code></pre></div><p>Lets test our server out, in one terminal let&rsquo;s start the server and in another we will use <code>curl</code>
+to call the endpoint we just created.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># one terminal</span>
+</span></span><span style="display:flex;"><span>cargo run
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># the other terminal</span>
+</span></span><span style="display:flex;"><span>curl 127.0.0.1:8080 <span style="color:#75715e"># Hello, world!</span>
+</span></span></code></pre></div><p>Let&rsquo;s add an automatic test for the <code>/</code> route. Lets start by adding the test that will create our
+application.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#[cfg(test)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">mod</span> test {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">use</span> <span style="color:#66d9ef">super</span>::app;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#[tokio::test]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">hello_world</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> app <span style="color:#f92672">=</span> app();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The <code>#[tokio::test]</code> will let us create and async test. Let&rsquo;s make the request for the endpoint
+inside the test.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs mod test
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// dependencies for the response
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> axum::{body::Body, http::Request};
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> tower::ServiceExt; <span style="color:#75715e">// for oneshot
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[tokio::test]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">hello_world</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> app <span style="color:#f92672">=</span> app();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> response <span style="color:#f92672">=</span> app
+</span></span><span style="display:flex;"><span>        .oneshot(Request::builder().uri(<span style="color:#e6db74">&#34;/&#34;</span>).body(Body::empty()).unwrap())
+</span></span><span style="display:flex;"><span>        .<span style="color:#66d9ef">await</span>
+</span></span><span style="display:flex;"><span>        .unwrap();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ...
+</span></span></span></code></pre></div><p>Finally let&rsquo;s add the assertions to the test.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs mod test fn hello_world()
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> response <span style="color:#f92672">=</span> <span style="color:#f92672">..</span>.;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">assert_eq!</span>(response.status(), StatusCode::<span style="color:#66d9ef">OK</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> body <span style="color:#f92672">=</span> hyper::body::to_bytes(response.into_body()).<span style="color:#66d9ef">await</span>.unwrap();
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">assert_eq!</span>(<span style="color:#f92672">&amp;</span>body[<span style="color:#f92672">..</span>], <span style="color:#e6db74">b</span><span style="color:#e6db74">&#34;Hello, World!&#34;</span>);
+</span></span></code></pre></div><p>Now we have a working and tested web server. Lets add some more useful utilities.</p>
+<p>The first is <a href="https://docs.rs/color-eyre/latest/color_eyre/">color-eyre</a> to have a better panic
+handler.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cargo add color_eyre
+</span></span></code></pre></div><p>Then, we have to initialize the panic handler.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">use</span> color_eyre::Result;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[tokio::main]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">async</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">main</span>() -&gt; Result<span style="color:#f92672">&lt;</span>()<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    color_eyre::install()<span style="color:#f92672">?</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span></code></pre></div><p>Now we can use the <code>?</code> in the main function instead of <code>unwrap</code> for errors. You can try to run two
+instances of the program at the same time to see an example of the eyre errors.</p>
+<p>Finally, we want to log what our server is doing. To do that we will use the tracing crate, which is
+already integrated with axum and eyre.</p>
+<p>So let&rsquo;s install the tracing dependencies.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cargo add tracing
+</span></span><span style="display:flex;"><span>cargo add tracing_subscriber --features<span style="color:#f92672">=</span>env-filter
+</span></span><span style="display:flex;"><span>cargo add tower_http --features<span style="color:#f92672">=</span>trace
+</span></span></code></pre></div><p>Then, in our <code>main.rs</code> after the eyre install we have to add the tracing subscriber.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs fn main()
+</span></span></span><span style="display:flex;"><span>tracing_subscriber::registry()
+</span></span><span style="display:flex;"><span>    .with(
+</span></span><span style="display:flex;"><span>        tracing_subscriber::EnvFilter::try_from_default_env()
+</span></span><span style="display:flex;"><span>            .unwrap_or_else(<span style="color:#f92672">|</span>_<span style="color:#f92672">|</span> <span style="color:#e6db74">&#34;example_testing=debug,tower_http=debug&#34;</span>.into()),
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    .with(tracing_subscriber::fmt::layer())
+</span></span><span style="display:flex;"><span>    .init();
+</span></span></code></pre></div><p>Where <code>example_testing</code> is the name of our application. This will try to parse the env filter or use
+<code>debug</code> as a default for either our application and tower.</p>
+<p>Next we add the tracing layer to the tower stack:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">app</span>() -&gt; <span style="color:#a6e22e">Router</span> {
+</span></span><span style="display:flex;"><span>    Router::new()
+</span></span><span style="display:flex;"><span>        .route(<span style="color:#e6db74">&#34;/&#34;</span>, get(<span style="color:#f92672">||</span> <span style="color:#66d9ef">async</span> { <span style="color:#e6db74">&#34;Hello, World!&#34;</span> }))
+</span></span><span style="display:flex;"><span>        .layer(TraceLayer::new_for_http())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Finally we can start tracing, let&rsquo;s add a debug event for the server address.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">// src/main.rs fn main()
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">let</span> address <span style="color:#f92672">=</span> SocketAddr::new(IpAddr::V4(Ipv4Addr::new(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>)), <span style="color:#ae81ff">8080</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tracing::<span style="color:#a6e22e">debug!</span>(<span style="color:#e6db74">&#34;listing on address {}&#34;</span>, address);
+</span></span></code></pre></div>
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/rust/">Rust</a></li>
+        <li><a href="/tags/web/">Web</a></li>
+        <li><a href="/tags/backend/">Backend</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>

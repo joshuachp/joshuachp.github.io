@@ -1,0 +1,278 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>GoatCounter Analytics for NextJS | Blog</title>
+<meta name="description" content="GoatCounter Analytics is a privacy-friendly web analytics tool perfect for small websites like blogs. It is free and open source." />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2023-02-28_goatcounter_analytics/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="goatcounter-analytics-for-nextjs">GoatCounter Analytics for NextJS</h1>
+<p>GoatCounter Analytics is a privacy-friendly web analytics tool perfect for small websites like
+blogs. It is free and open source, and it also has a self hosted option.</p>
+<p>I started using it in this blog, to see how a better understanding the traffic, while still being
+privacy-friendly. Before, I was using the panel provided by Cloudflare, which is also a good option.
+But it didn&rsquo;t provide me with enough information like the number of page views per page or article
+or the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer">Referrer</a> information.</p>
+<p><picture>
+      <source srcset="/posts/2023-02-28_goatcounter_analytics/images/goatcounter_hu_a72bd6d0ae379a34.webp" type="image/webp" />
+      <source srcset="/posts/2023-02-28_goatcounter_analytics/images/goatcounter_hu_3ef5fb7cd6231c4a.avif" type="image/webp" />
+    <img
+      class="picture"
+      src="/posts/2023-02-28_goatcounter_analytics/images/goatcounter.png"
+      width="1920"
+      height="932"
+      loading="lazy"alt="GoatCounter"/>
+  </picture></p>
+<h2 id="why-use-goatcounter-analytics">Why Use GoatCounter Analytics?</h2>
+<p>Privacy is a growing concern on the web, and more and more users are becoming aware of the
+importance of protecting their online data. GoatCounter is a great solution for website owners who
+want to respect their users&rsquo; privacy while still gathering useful data about their website traffic.
+It is a simple and lightweight tool that provides essential data like page views, referrer
+information, and more, without tracking any personal data or using cookies.</p>
+<h2 id="getting-started-with-goatcounter-analytics">Getting Started with GoatCounter Analytics</h2>
+<p>To use GoatCounter Analytics, the first thing you need to do is to create an account on the
+GoatCounter website for your site. Once you have created an account, GoatCounter will provide you
+with a script tag that you need to add to your website.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">data-goatcounter</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://example.goatcounter.com/count&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">async</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;//gc.zgo.at/count.js&#34;</span>
+</span></span><span style="display:flex;"><span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><h2 id="integrating-goatcounter-with-nextjs">Integrating GoatCounter with NextJS</h2>
+<p>To integrate GoatCounter with your NextJS website, you&rsquo;ll need to add a script tag to your
+<code>_app.tsx</code> file, which will ensure that the script is loaded on every page. It&rsquo;s essential to use
+the <code>afterInteractive</code> strategy to avoid impacting page load performance. Additionally, you&rsquo;ll need
+to hook up with the router events to send page changes to GoatCounte.</p>
+<ol>
+<li>
+<p>Add the GoatCounter script tag to your pages/_app.tsx file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-jsx" data-lang="jsx"><span style="display:flex;"><span><span style="color:#75715e">// pages/_app.tsx
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">MyApp</span>({ <span style="color:#a6e22e">Component</span>, <span style="color:#a6e22e">pageProps</span> }) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (
+</span></span><span style="display:flex;"><span>    &lt;&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">Script</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">strategy</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;afterInteractive&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">data</span><span style="color:#960050;background-color:#1e0010">-</span><span style="color:#a6e22e">goatcounter</span><span style="color:#f92672">=</span>{<span style="color:#e6db74">`https://</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">API</span><span style="color:#e6db74">}</span><span style="color:#e6db74">.goatcounter.com/count`</span>}
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;//gc.zgo.at/count.js&#34;</span>
+</span></span><span style="display:flex;"><span>      &gt;
+</span></span><span style="display:flex;"><span>      &lt;/<span style="color:#f92672">Script</span>&gt;
+</span></span><span style="display:flex;"><span>      &lt;<span style="color:#f92672">Component</span> {<span style="color:#a6e22e">...pageProps</span>} /&gt;
+</span></span><span style="display:flex;"><span>    &lt;/&gt;
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Remember to put the script <strong>outside</strong> the <code>Header</code> component, otherwise it won&rsquo;t work and the
+script will not be loaded correctly.</p>
+</li>
+<li>
+<p>The script will add a magic pixel on the first load, which will phone home to the GoatCounter
+server and registered the visit. But it won&rsquo;t work for the rest of the of the page views since
+NextJS is a SPA. So we need to hook up to the router events to send the page views to
+GoatCounter.</p>
+</li>
+<li>
+<p>Now you need to register a event listener to the router, so when the page changes we&rsquo;ll send the
+information to the GoatCounter server. To do that, we&rsquo;ll use the <code>useRouter</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-jsx" data-lang="jsx"><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">useRouter</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;next/router&#34;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">useEffect</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;react&#34;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">default</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">MyApp</span>({ <span style="color:#a6e22e">Component</span>, <span style="color:#a6e22e">pageProps</span> }) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">router</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">useRouter</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">useEffect</span>(() =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">handleRouteChange</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">url</span>) =&gt; {
+</span></span><span style="display:flex;"><span>      window.<span style="color:#a6e22e">goatcounter</span>.<span style="color:#a6e22e">count</span>({
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">url</span>,
+</span></span><span style="display:flex;"><span>      });
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;routeChangeComplete&#34;</span>, <span style="color:#a6e22e">handleRouteChange</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> () =&gt; {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">events</span>.<span style="color:#a6e22e">off</span>(<span style="color:#e6db74">&#34;routeChangeComplete&#34;</span>, <span style="color:#a6e22e">handleRouteChange</span>);
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>  }, []);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> &lt;<span style="color:#f92672">Component</span> {<span style="color:#a6e22e">...pageProps</span>} /&gt;;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We use the <code>useEffect</code> to add the event listener only once, and we remove it when the component
+is unmounted.</p>
+</li>
+</ol>
+<p>Now you can go to your GoatCounter dashboard and see the page views. You can also see the referrer
+information, which is very useful to see where your traffic is coming from.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>GoatCounter is a privacy-friendly analytics tool that provides useful data about website traffic
+without tracking any personal data. By following the steps outlined in this article, you can
+integrate GoatCounter Analytics with your NextJS web application and start gathering useful data
+about your website traffic while respecting your users&rsquo; privacy.</p>
+<h2 id="update-2023-04-03-app-directory">Update 2023-04-03 <code>app</code> directory</h2>
+<p>Since the NextJS <code>canary</code> version and the future <code>13.3</code> release will support static exports, I
+decided to move the <code>pages</code> directory to the <code>app</code> directory.</p>
+<p>In the new layout the <code>useRouter</code> is deprecated in favour of the new and more ergonomic
+<code>usePathname</code> and <code>useSearchParams</code> hooks. So I needed to update the above script to support the new
+API.</p>
+<p>I also improved the component, using the state hook to wait for the <code>goatcounter</code> script to be
+loaded before using it.</p>
+<p>The component consists in the following:</p>
+<ul>
+<li>Getting the <code>pathname</code>, and optionally the query string, with the <code>usePathname</code> hook</li>
+<li>A <code>goatcounter</code> state value for the GoatCounter script since we cannot access the window object in
+the static export</li>
+<li>A <code>useEffect</code> hook to run the code only when the path changes or the script is loaded</li>
+<li>Finally the <code>Script</code> component to load the script, and when loaded it will update the
+<code>goatcounter</code> state value</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-tsx" data-lang="tsx"><span style="display:flex;"><span><span style="color:#66d9ef">export</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">GoatCounter</span>({ <span style="color:#a6e22e">api</span> }<span style="color:#f92672">:</span> <span style="color:#a6e22e">GoatCounterProps</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pathname</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">usePathname</span>();
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">goatcounter</span>, <span style="color:#a6e22e">setGoatcounter</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useState</span>&lt;<span style="color:#f92672">GoatCounter</span> <span style="color:#960050;background-color:#1e0010">|</span> <span style="color:#a6e22e">null</span>&gt;(<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">useEffect</span>(() <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// We need to wait for the script to load before we can use it.
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">goatcounter</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">goatcounter</span>.<span style="color:#a6e22e">count</span>({
+</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// path: location.pathname + location.search + location.hash,
+</span></span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">path</span>: <span style="color:#66d9ef">pathname</span>,
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>  }, [<span style="color:#a6e22e">pathname</span>, <span style="color:#a6e22e">goatcounter</span>]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> (
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">Script</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">strategy</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;afterInteractive&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">data-goatcounter</span><span style="color:#f92672">=</span>{<span style="color:#e6db74">`https://</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">api</span><span style="color:#e6db74">}</span><span style="color:#e6db74">.goatcounter.com/count`</span>}
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;//gc.zgo.at/count.js&#34;</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">onLoad</span><span style="color:#f92672">=</span>{() <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>window.<span style="color:#a6e22e">goatcounter</span>) {
+</span></span><span style="display:flex;"><span>          <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#34;goatcounter object is not defined&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">setGoatcounter</span>(window.<span style="color:#a6e22e">goatcounter</span>);
+</span></span><span style="display:flex;"><span>      }}
+</span></span><span style="display:flex;"><span>    /&gt;
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">typescript</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="bonus">Bonus</h3>
+<p>To make the typescript compiler happy, I added the following to the <code>types/index.d.ts</code> file, you
+also need to specify it into the tsconfig file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * GoatCounter script object.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">GoatCounter</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">count</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">options</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">path</span>: <span style="color:#66d9ef">string</span> }) <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">void</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Declare the global goatcounter that is included as a script.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">Window</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Window</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">goatcounter?</span>: <span style="color:#66d9ef">GoatCounter</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/web/">Web</a></li>
+        <li><a href="/tags/nextjs/">Nextjs</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>

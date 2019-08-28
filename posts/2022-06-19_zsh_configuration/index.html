@@ -1,0 +1,376 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ZSH configuration | Blog</title>
+<meta name="description" content="Fine tuning ZSH configuring after moving away form Oh-My-Zsh" />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2022-06-19_zsh_configuration/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="zsh-configuration">ZSH configuration</h1>
+<p>I wanted to reconfigure the my zsh setup.</p>
+<p>Before, I was using <a href="https://ohmyz.sh/">Oh My ZSH</a>. Which is a wonderful configuration framework for
+<code>zsh</code>.</p>
+<p>The problem I had was not using the feature that it provided. I was only using the base
+configuration and two plugins: <code>git</code> and <code>sudo</code>. Also, I didn&rsquo;t use any theme since I prefer the
+<a href="https://starship.rs/">starship</a> prompt.</p>
+<p>I wanted to strip down the configuration and remove this dependency. So I looked at the <code>omz</code>
+configurations and <code>man zsh(1)</code> to came up with the following configuration. Another source was the
+<a href="https://github.com/sorin-ionescu/prezto/">prezto</a> framework, that you could look at for an
+alternative to <code>omz</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Return if not run interactively</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[[</span> $- !<span style="color:#f92672">=</span> *i* <span style="color:#f92672">]]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Env variables</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Cache directory</span>
+</span></span><span style="display:flex;"><span>ZSH_CACHE_DIR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$XDG_CACHE_HOME<span style="color:#e6db74">/zsh&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Specify comp dump directory</span>
+</span></span><span style="display:flex;"><span>ZSH_COMPDUMP<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$ZSH_CACHE_DIR<span style="color:#e6db74">/zcompdump&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># FPath</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#export FPATH=&#34;$FPATH:$XDG_DATA_HOME/zsh&#34;</span>
+</span></span><span style="display:flex;"><span>fpath<span style="color:#f92672">+=</span>$XDG_DATA_HOME/zsh
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># List colors</span>
+</span></span><span style="display:flex;"><span>LS_COLORS<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>LS_COLORS<span style="color:#66d9ef">:-</span><span style="color:#e6db74">&#39;di=34:ln=35:so=32:pi=33:ex=31:bd=36;01:cd=33;01:su=31;40;07:sg=36;40;07:tw=32;40;07:ow=33;40;07:&#39;</span><span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># History</span>
+</span></span><span style="display:flex;"><span>HISTFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$ZSH_CACHE_DIR<span style="color:#e6db74">/zsh_history&#34;</span>
+</span></span><span style="display:flex;"><span>HISTSIZE<span style="color:#f92672">=</span><span style="color:#ae81ff">50000</span>
+</span></span><span style="display:flex;"><span>SAVEHIST<span style="color:#f92672">=</span><span style="color:#ae81ff">10000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -f <span style="color:#e6db74">&#34;</span>$ZSH_CACHE_DIR<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    mkdir -p <span style="color:#e6db74">&#34;</span>$ZSH_CACHE_DIR<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Zsh functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Remove default prompt</span>
+</span></span><span style="display:flex;"><span>autoload -U promptinit <span style="color:#f92672">&amp;&amp;</span> promptinit <span style="color:#f92672">&amp;&amp;</span> prompt off
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Move with regex</span>
+</span></span><span style="display:flex;"><span>autoload -U zmv
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Jump</span>
+</span></span><span style="display:flex;"><span>autoload -U j
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Zsh options</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Share history between shells</span>
+</span></span><span style="display:flex;"><span>setopt share_history
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Try to correct commands</span>
+</span></span><span style="display:flex;"><span>setopt correct
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># History</span>
+</span></span><span style="display:flex;"><span>setopt extended_history
+</span></span><span style="display:flex;"><span>setopt hist_expire_dups_first
+</span></span><span style="display:flex;"><span>setopt hist_verify
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Completion</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># automatically load bash completion functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># autoload -U +X bashcompinit &amp;&amp; bashcompinit -d &#34;$ZSH_COMPDUMP&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Init completion</span>
+</span></span><span style="display:flex;"><span>autoload -U compinit <span style="color:#f92672">&amp;&amp;</span> compinit -C -d <span style="color:#e6db74">&#34;</span>$ZSH_COMPDUMP<span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>zmodload -i zsh/complist
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># show completion menu on successive tab press</span>
+</span></span><span style="display:flex;"><span>setopt always_to_end
+</span></span><span style="display:flex;"><span>setopt auto_list
+</span></span><span style="display:flex;"><span>setopt auto_menu
+</span></span><span style="display:flex;"><span>setopt auto_param_slash
+</span></span><span style="display:flex;"><span>setopt complete_aliases
+</span></span><span style="display:flex;"><span>setopt complete_in_word
+</span></span><span style="display:flex;"><span>setopt extended_glob
+</span></span><span style="display:flex;"><span>setopt path_dirs
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># do not autoselect the first completion entry</span>
+</span></span><span style="display:flex;"><span>unsetopt menu_complete
+</span></span><span style="display:flex;"><span>unsetopt flowcontrol
+</span></span><span style="display:flex;"><span>unsetopt CASE_GLOB
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Styles</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Defaults.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:default&#39;</span> list-colors <span style="color:#e6db74">${</span>(s.:.)LS_COLORS<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:default&#39;</span> list-prompt <span style="color:#e6db74">&#39;%S%M matches%s&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> special-dirs true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use caching so that commands like apt and dpkg complete are useable</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion::complete:*&#39;</span> use-cache on
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion::complete:*&#39;</span> cache-path <span style="color:#e6db74">&#34;</span>$ZSH_CACHE_DIR<span style="color:#e6db74">/completion&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Case insensitive</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> matcher-list <span style="color:#e6db74">&#39;m:{a-zA-Z}={A-Za-z}&#39;</span> <span style="color:#e6db74">&#39;r:|[._-]=* r:|=*&#39;</span> <span style="color:#e6db74">&#39;l:|=* r:|=*&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Group matches and describe.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:*:*:*&#39;</span> menu <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:matches&#39;</span> group <span style="color:#e6db74">&#39;yes&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:options&#39;</span> description <span style="color:#e6db74">&#39;yes&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:options&#39;</span> auto-description <span style="color:#e6db74">&#39;%d&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:corrections&#39;</span> format <span style="color:#e6db74">&#39; %F{green}-- %d (errors: %e) --%f&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:descriptions&#39;</span> format <span style="color:#e6db74">&#39; %F{yellow}-- %d --%f&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:messages&#39;</span> format <span style="color:#e6db74">&#39; %F{purple} -- %d --%f&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:warnings&#39;</span> format <span style="color:#e6db74">&#39; %F{red}-- no matches found --%f&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> format <span style="color:#e6db74">&#39; %F{yellow}-- %d --%f&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> group-name <span style="color:#e6db74">&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> verbose yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Fuzzy match mistyped completions.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> completer _complete _match _approximate
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:match:*&#39;</span> original only
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:approximate:*&#39;</span> max-errors <span style="color:#ae81ff">1</span> numeric
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Increase the number of errors based on the length of the typed word. But make</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># sure to cap (at 7) the max-errors to avoid hanging.</span>
+</span></span><span style="display:flex;"><span>zstyle -e <span style="color:#e6db74">&#39;:completion:*:approximate:*&#39;</span> max-errors <span style="color:#e6db74">&#39;reply=($((($#PREFIX+$#SUFFIX)/3&gt;7?7:($#PREFIX+$#SUFFIX)/3))numeric)&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Don&#39;t complete unavailable commands.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:functions&#39;</span> ignored-patterns <span style="color:#e6db74">&#39;(_*|pre(cmd|exec))&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Array completion element sorting.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:-subscript-:*&#39;</span> tag-order indexes parameters
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Directories</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:cd:*&#39;</span> tag-order local-directories directory-stack path-directories
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:cd:*:directory-stack&#39;</span> menu yes <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:-tilde-:*&#39;</span> group-order <span style="color:#e6db74">&#39;named-directories&#39;</span> <span style="color:#e6db74">&#39;path-directories&#39;</span> <span style="color:#e6db74">&#39;users&#39;</span> <span style="color:#e6db74">&#39;expand&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*&#39;</span> squeeze-slashes true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># History</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:history-words&#39;</span> stop yes
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:history-words&#39;</span> remove-all-dups yes
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:history-words&#39;</span> list false
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:history-words&#39;</span> menu yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Environment Variables</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion::*:(-command-|export):*&#39;</span> fake-parameters <span style="color:#e6db74">${${${</span>_comps[(I)-value-*]#*,<span style="color:#e6db74">}</span>%%,*<span style="color:#e6db74">}</span>:#-*-<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Populate hostname completion. But allow ignoring custom entries from static</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># */etc/hosts* which might be uninteresting.</span>
+</span></span><span style="display:flex;"><span>zstyle -a <span style="color:#e6db74">&#39;:prezto:module:completion:*:hosts&#39;</span> etc-host-ignores <span style="color:#e6db74">&#39;_etc_host_ignores&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>zstyle -e <span style="color:#e6db74">&#39;:completion:*:hosts&#39;</span> hosts <span style="color:#e6db74">&#39;reply=(
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ${=${=${=${${(f)&#34;$(cat {/etc/ssh/ssh_,~/.ssh/}known_hosts(|2)(N) 2&gt; /dev/null)&#34;}%%[#| ]*}//\]:[0-9]*/ }//,/ }//\[/ }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ${=${(f)&#34;$(cat /etc/hosts(|)(N) &lt;&lt;(ypcat hosts 2&gt; /dev/null))&#34;}%%(\#${_etc_host_ignores:+|${(j:|:)~_etc_host_ignores}})*}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ${=${${${${(@M)${(f)&#34;$(cat ~/.ssh/config 2&gt; /dev/null)&#34;}:#Host *}#Host }:#*\**}:#*\?*}}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">)&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Don&#39;t complete uninteresting users...</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:*:users&#39;</span> ignored-patterns <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  adm amanda apache avahi beaglidx bin cacti canna clamav daemon <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  dbus distcache dovecot fax ftp games gdm gkrellmd gopher <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  hacluster haldaemon halt hsqldb ident junkbust ldap lp mail <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  mailman mailnull mldonkey mysql nagios <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  named netdump news nfsnobody nobody nscd ntp nut nx openvpn <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  operator pcap postfix postgres privoxy pulse pvm quagga radvd <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span>  rpc rpcuser rpm shutdown squid sshd sync uucp vcsa xfs <span style="color:#e6db74">&#39;_*&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ... unless we really want to.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;*&#39;</span> single-ignored show
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Ignore multiple entries.</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(rm|kill|diff):*&#39;</span> ignore-line other
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:rm:*&#39;</span> file-patterns <span style="color:#e6db74">&#39;*:all-files&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Kill</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:*:*:processes&#39;</span> command <span style="color:#e6db74">&#39;ps -u $LOGNAME -o pid,user,command -w&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:kill:*:processes&#39;</span> list-colors <span style="color:#e6db74">&#39;=(#b) #([0-9]#) ([0-9a-z-]#)*=01;36=0=01&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:kill:*&#39;</span> menu yes <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:kill:*&#39;</span> force-list always
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:kill:*&#39;</span> insert-ids single
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Man</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:manuals&#39;</span> separate-sections true
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:manuals.(^1*)&#39;</span> insert-sections true
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Media Players</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:mpg123:*&#39;</span> file-patterns <span style="color:#e6db74">&#39;*.(mp3|MP3):mp3\ files *(-/):directories&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:mpg321:*&#39;</span> file-patterns <span style="color:#e6db74">&#39;*.(mp3|MP3):mp3\ files *(-/):directories&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:ogg123:*&#39;</span> file-patterns <span style="color:#e6db74">&#39;*.(ogg|OGG|flac):ogg\ files *(-/):directories&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:*:mocp:*&#39;</span> file-patterns <span style="color:#e6db74">&#39;*.(wav|WAV|mp3|MP3|ogg|OGG|flac):ogg\ files *(-/):directories&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Mutt</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -s <span style="color:#e6db74">&#34;</span>$HOME<span style="color:#e6db74">/.mutt/aliases&#34;</span> <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>  zstyle <span style="color:#e6db74">&#39;:completion:*:*:mutt:*&#39;</span> menu yes <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>  zstyle <span style="color:#e6db74">&#39;:completion:*:mutt:*&#39;</span> users <span style="color:#e6db74">${${${</span>(f)<span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>&lt;<span style="color:#e6db74">&#34;</span>$HOME<span style="color:#e6db74">/.mutt/aliases&#34;</span><span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">}</span>#alias[[:space:]]<span style="color:#e6db74">}</span>%%[[:space:]]*<span style="color:#e6db74">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># SSH/SCP/RSYNC</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(ssh|scp|rsync):*&#39;</span> tag-order <span style="color:#e6db74">&#39;hosts:-host:host hosts:-domain:domain hosts:-ipaddr:ip\ address *&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(scp|rsync):*&#39;</span> group-order users files all-files hosts-domain hosts-host hosts-ipaddr
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:ssh:*&#39;</span> group-order users hosts-domain hosts-host users hosts-ipaddr
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(ssh|scp|rsync):*:hosts-host&#39;</span> ignored-patterns <span style="color:#e6db74">&#39;*(.|:)*&#39;</span> loopback ip6-loopback localhost ip6-localhost broadcasthost
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(ssh|scp|rsync):*:hosts-domain&#39;</span> ignored-patterns <span style="color:#e6db74">&#39;&lt;-&gt;.&lt;-&gt;.&lt;-&gt;.&lt;-&gt;&#39;</span> <span style="color:#e6db74">&#39;^[-[:alnum:]]##(.[-[:alnum:]]##)##&#39;</span> <span style="color:#e6db74">&#39;*@*&#39;</span>
+</span></span><span style="display:flex;"><span>zstyle <span style="color:#e6db74">&#39;:completion:*:(ssh|scp|rsync):*:hosts-ipaddr&#39;</span> ignored-patterns <span style="color:#e6db74">&#39;^(&lt;-&gt;.&lt;-&gt;.&lt;-&gt;.&lt;-&gt;|(|::)([[:xdigit:].]##:(#c,2))##(|%*))&#39;</span> <span style="color:#e6db74">&#39;127.0.0.&lt;-&gt;&#39;</span> <span style="color:#e6db74">&#39;255.255.255.255&#39;</span> <span style="color:#e6db74">&#39;::1&#39;</span> <span style="color:#e6db74">&#39;fe80::*&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Keymaps</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use vim keybindings</span>
+</span></span><span style="display:flex;"><span>bindkey -v
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>autoload -Uz edit-command-line
+</span></span><span style="display:flex;"><span>zle -N edit-command-line
+</span></span><span style="display:flex;"><span>bindkey -M vicmd <span style="color:#e6db74">&#39;vv&#39;</span> edit-command-line
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># #</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Autosuggestion</span>
+</span></span><span style="display:flex;"><span>ZSH_AUTOSUGGEST<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -f $ZSH_AUTOSUGGEST <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    source $ZSH_AUTOSUGGEST
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;fg=white,underline&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Syntax Highlighting</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>ZSH_HIGHLIGHT<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#f92672">[[</span> -f $ZSH_HIGHLIGHT <span style="color:#f92672">]]</span>; <span style="color:#66d9ef">then</span>
+</span></span><span style="display:flex;"><span>    source $ZSH_HIGHLIGHT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_HIGHLIGHTERS<span style="color:#f92672">=(</span>main brackets<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># main</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>unknown-token<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=red&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>comment<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=white,bg=black&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>path<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=magenta&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>path_pathseparator<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=magenta,bold&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>single-hyphen-option<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=yellow&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>double-hyphen-option<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=yellow&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>commandseparator<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=cyan&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Brackets</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-error<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=red&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-level-1<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=blue&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-level-2<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=green&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-level-3<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=magenta&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-level-4<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=yellow&#39;</span>
+</span></span><span style="display:flex;"><span>    ZSH_HIGHLIGHT_STYLES<span style="color:#f92672">[</span>bracket-level-5<span style="color:#f92672">]=</span><span style="color:#e6db74">&#39;fg=cyan&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Aliases</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>source $HOME/.aliasrc
+</span></span><span style="display:flex;"><span>eval <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>direnv hook zsh<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">##</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Starship</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span>eval <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>starship init zsh<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+</span></span></code></pre></div><p>Exploring the <code>zsh</code> options let me fine tune the configuration for my needs, without the overhead
+required by a framework to satisfy all different needs.</p>
+<p>Other resources:</p>
+<ul>
+<li><a href="http://www.bash2zsh.com/zsh_refcard/refcard.pdf">zsh refcard</a></li>
+<li><a href="https://grml.org/zsh/zsh-lovers.html">zsh lovers</a></li>
+</ul>
+
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/shell/">Shell</a></li>
+        <li><a href="/tags/zsh/">Zsh</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>

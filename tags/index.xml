@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Tags on Blog</title>
+		<link>https://joshuachp.dev/tags/</link>
+		<description>Recent content in Tags on Blog</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<atom:link href="https://joshuachp.dev/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Backend</title>
+				<link>https://joshuachp.dev/tags/backend/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/backend/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CCCIT</title>
+				<link>https://joshuachp.dev/tags/cccit/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/cccit/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CORS</title>
+				<link>https://joshuachp.dev/tags/cors/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/cors/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>CTF</title>
+				<link>https://joshuachp.dev/tags/ctf/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/ctf/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Gpg</title>
+				<link>https://joshuachp.dev/tags/gpg/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/gpg/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Laravel</title>
+				<link>https://joshuachp.dev/tags/laravel/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/laravel/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Nextjs</title>
+				<link>https://joshuachp.dev/tags/nextjs/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/nextjs/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Php</title>
+				<link>https://joshuachp.dev/tags/php/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/php/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Rust</title>
+				<link>https://joshuachp.dev/tags/rust/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/rust/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Security</title>
+				<link>https://joshuachp.dev/tags/security/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/security/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Services</title>
+				<link>https://joshuachp.dev/tags/services/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/services/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Shell</title>
+				<link>https://joshuachp.dev/tags/shell/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/shell/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Systemd</title>
+				<link>https://joshuachp.dev/tags/systemd/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/systemd/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>THM</title>
+				<link>https://joshuachp.dev/tags/thm/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/thm/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Web</title>
+				<link>https://joshuachp.dev/tags/web/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/web/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Zsh</title>
+				<link>https://joshuachp.dev/tags/zsh/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/tags/zsh/</guid>
+				<description></description>
+			</item>
+	</channel>
+</rss>

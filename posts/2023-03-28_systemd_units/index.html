@@ -1,0 +1,195 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Systemd Units | Blog</title>
+<meta name="description" content="A quick overview of systemd units, how to use them and some awesome features they provide." />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2023-03-28_systemd_units/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="systemd-units">Systemd Units</h1>
+<p>Systemd is a system and service manager for Linux. It is the default init system for a lot of
+distros and is awesome to manage services, sockets, timers, (and much more but we don&rsquo;t talk about
+that).</p>
+<h2 id="what-is-a-unit">What is a unit?</h2>
+<p>A unit is a configuration file that describes a process or a group of processes. It configures how
+the process should be started, stopped, restarted, and so on. It declares the dependencies between
+units and the order in which they should be started. It can also configure the resources that the
+process requires, such as the amount of memory or the number of open files.</p>
+<p>A unit can be a <code>service</code> when ending in <code>.service</code>, this defines a start, stop and restart command.
+A <code>service</code> can be managed manually with <code>systemctl {start|stop|restart} &lt;service&gt;</code>, but it is also
+possible to enable the service to start on boot with <code>systemctl enable &lt;service&gt;</code>.</p>
+<p>A unit can also be a <code>socket</code> when ending in <code>.socket</code>, this defines a socket that can be used to
+start a service.</p>
+<p>Finally unit can also be a <code>timer</code> when ending in <code>.timer</code>, this defines a timer that can start a
+service at a specific time (yep its a cron-job).</p>
+<h2 id="how-to-create-your-own-unit">How to create your own unit?</h2>
+<p>A unit is a text file that contains a set of key-value pairs similar to the <code>ini</code> file format, the
+format is defined in
+<a href="https://man7.org/linux/man-pages/man5/systemd.unit.5.html">man (5) systemd.unit</a>. The file is
+divided into sections, each section is defined by a header in square brackets. For example the
+<a href="https://www.nginx.com/resources/wiki/start/topics/examples/systemd/">nginx service</a> is defined as:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#66d9ef">[Unit]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Description</span><span style="color:#f92672">=</span><span style="color:#e6db74">The NGINX HTTP and reverse proxy server</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">After</span><span style="color:#f92672">=</span><span style="color:#e6db74">syslog.target network-online.target remote-fs.target nss-lookup.target</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Wants</span><span style="color:#f92672">=</span><span style="color:#e6db74">network-online.target</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Service]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Type</span><span style="color:#f92672">=</span><span style="color:#e6db74">forking</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PIDFile</span><span style="color:#f92672">=</span><span style="color:#e6db74">/run/nginx.pid</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecStartPre</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/sbin/nginx -t</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecStart</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/sbin/nginx</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecReload</span><span style="color:#f92672">=</span><span style="color:#e6db74">/usr/sbin/nginx -s reload</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">ExecStop</span><span style="color:#f92672">=</span><span style="color:#e6db74">/bin/kill -s QUIT $MAINPID</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">PrivateTmp</span><span style="color:#f92672">=</span><span style="color:#e6db74">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[Install]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">WantedBy</span><span style="color:#f92672">=</span><span style="color:#e6db74">multi-user.target</span>
+</span></span></code></pre></div><p>The first section <code>[Unit]</code> defines the service and its dependencies. The second section <code>[Service]</code>
+defines how the service should be started, stopped and restarted. The last section <code>[Install]</code>
+defines how the service should be installed.</p>
+<p>This file can be placed in <code>/etc/systemd/system/</code> for a system-wide service or
+<code>~/.config/systemd/user/</code> for a user service, which is then managed by passing the user flag to
+systemctl <code>systemctl start --user nginx</code>.</p>
+<h2 id="why-are-they-so-good">Why are they so good?</h2>
+<p>Systemd units are awesome because they are flexible and can be used to manage a lot of different
+things. They have a lot of features that make them powerful. For example you can make the service
+restart if it crashes, by adding <code>Restart=on-failure</code> to the <code>[Service]</code> section. This is similar to
+the <code>--restart=on-failure</code> flag in docker. You can also make the service restart after a specific
+time by adding <code>RestartSec=100ms</code> to the <code>[Service]</code> section.</p>
+<p>You can even restart the entire operating system if a service crashes by adding
+<code>FailureAction=reboot</code> to the <code>[Service]</code> section. This is especially useful when you are running on
+embedded devices and want to make sure that the device is running properly.</p>
+<blockquote>
+<p>Note that there are some pitfalls when using <code>FailureAction=reboot</code> and you should limit the times
+the service is restarted to prevent a reboot loop. By default the service is restarted 5 times in
+10 seconds, after that the service is marked as failed and the system is rebooted.</p>
+<p>This can be configured with the <code>StartLimitIntervalSec</code> and <code>StartLimitBurst</code></p>
+</blockquote>
+<p>You could also make the service send an email, http request or even a message to a slack channel if
+it crashes by adding <code>OnFailure=error-report.service</code> to the <code>[Service]</code> section. This will execute
+the error-report service (you can set the error-report service type to <code>oneshot</code>) if the service
+crashes or fails to start.</p>
+<p>The services can also be configured to start in isolation or with some mounted folder or interface.
+They can be configured for many different facets of the system and can be set up to make sure the
+system is always running properly.</p>
+<p>Additionally, all the services can be managed with a single command and will all log to the journal.
+This permits you to manage the services and to debug issues with a single command.</p>
+<p>To validate the configuration of a service you can use <code>systemctl-analyze verify &lt;service&gt;</code> which
+will check if the service is valid and if the dependencies are met.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>In conclusion, systemd is an excellent system and service manager for Linux that offers a wide range
+of features for developers to manage services efficiently. Its units provide a flexible way to
+manage processes and their dependencies, allowing developers to focus on building and deploying
+their applications without worrying about system management. Additionally, systemd&rsquo;s powerful
+features, such as service isolation, resource allocation, and automatic restart on failure, provide
+developers with greater control over their applications&rsquo; behavior and ensure that the system is
+always running optimally. Furthermore, with systemd&rsquo;s unified interface and logging to the journal,
+developers can manage and debug their services. In summary, systemd is a great tool for developers
+who want to manage their services more efficiently and with greater control, and it is definitely
+the tool to reach for when choosing a system and service manager for Linux.</p>
+
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/systemd/">Systemd</a></li>
+        <li><a href="/tags/services/">Services</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>

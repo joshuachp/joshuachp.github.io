@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Web on Blog</title>
+		<link>https://joshuachp.dev/tags/web/</link>
+		<description>Recent content in Web on Blog</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<atom:link href="https://joshuachp.dev/tags/web/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Axum Server</title>
+				<link>https://joshuachp.dev/posts/2022-12-02_axum_server/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/posts/2022-12-02_axum_server/</guid>
+				<description>&lt;h1 id=&#34;axum-server&#34;&gt;Axum Server&lt;/h1&gt;&#xA;&lt;p&gt;Install required dependencies&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cargo add axum&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cargo add hyper --features&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;full&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cargo add tokio --features&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;full&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cargo add toker&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Lets create a new function that will return the &lt;code&gt;axum::routing::Router&lt;/code&gt;. This will be the core of&#xA;our server.&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-rust&#34; data-lang=&#34;rust&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// src/main.rs&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;fn&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;app&lt;/span&gt;() -&amp;gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Router&lt;/span&gt; {&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    Router::new().route(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/&amp;#34;&lt;/span&gt;, get(&lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;async&lt;/span&gt; { &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello, World!&amp;#34;&lt;/span&gt; }))&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Creating a function that returns the &lt;code&gt;Router&lt;/code&gt; will help us later to test our application.&lt;/p&gt;&#xA;&lt;p&gt;Add the tokio config to the main function.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>GoatCounter Analytics for NextJS</title>
+				<link>https://joshuachp.dev/posts/2023-02-28_goatcounter_analytics/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/posts/2023-02-28_goatcounter_analytics/</guid>
+				<description>&lt;h1 id=&#34;goatcounter-analytics-for-nextjs&#34;&gt;GoatCounter Analytics for NextJS&lt;/h1&gt;&#xA;&lt;p&gt;GoatCounter Analytics is a privacy-friendly web analytics tool perfect for small websites like&#xA;blogs. It is free and open source, and it also has a self hosted option.&lt;/p&gt;&#xA;&lt;p&gt;I started using it in this blog, to see how a better understanding the traffic, while still being&#xA;privacy-friendly. Before, I was using the panel provided by Cloudflare, which is also a good option.&#xA;But it didn&amp;rsquo;t provide me with enough information like the number of page views per page or article&#xA;or the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer&#34;&gt;Referrer&lt;/a&gt; information.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

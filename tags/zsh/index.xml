@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Zsh on Blog</title>
+		<link>https://joshuachp.dev/tags/zsh/</link>
+		<description>Recent content in Zsh on Blog</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<atom:link href="https://joshuachp.dev/tags/zsh/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>ZSH configuration</title>
+				<link>https://joshuachp.dev/posts/2022-06-19_zsh_configuration/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/posts/2022-06-19_zsh_configuration/</guid>
+				<description>&lt;h1 id=&#34;zsh-configuration&#34;&gt;ZSH configuration&lt;/h1&gt;&#xA;&lt;p&gt;I wanted to reconfigure the my zsh setup.&lt;/p&gt;&#xA;&lt;p&gt;Before, I was using &lt;a href=&#34;https://ohmyz.sh/&#34;&gt;Oh My ZSH&lt;/a&gt;. Which is a wonderful configuration framework for&#xA;&lt;code&gt;zsh&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The problem I had was not using the feature that it provided. I was only using the base&#xA;configuration and two plugins: &lt;code&gt;git&lt;/code&gt; and &lt;code&gt;sudo&lt;/code&gt;. Also, I didn&amp;rsquo;t use any theme since I prefer the&#xA;&lt;a href=&#34;https://starship.rs/&#34;&gt;starship&lt;/a&gt; prompt.&lt;/p&gt;&#xA;&lt;p&gt;I wanted to strip down the configuration and remove this dependency. So I looked at the &lt;code&gt;omz&lt;/code&gt;&#xA;configurations and &lt;code&gt;man zsh(1)&lt;/code&gt; to came up with the following configuration. Another source was the&#xA;&lt;a href=&#34;https://github.com/sorin-ionescu/prezto/&#34;&gt;prezto&lt;/a&gt; framework, that you could look at for an&#xA;alternative to &lt;code&gt;omz&lt;/code&gt;.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

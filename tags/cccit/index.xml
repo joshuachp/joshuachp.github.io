@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>CCCIT on Blog</title>
+		<link>https://joshuachp.dev/tags/cccit/</link>
+		<description>Recent content in CCCIT on Blog</description>
+		<generator>Hugo</generator>
+		<language>en</language>
+		
+		
+		
+		
+			<atom:link href="https://joshuachp.dev/tags/cccit/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>CyberChallengeIT CTF - Group Challenge</title>
+				<link>https://joshuachp.dev/posts/2020-01-06_cyber_challenge/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>https://joshuachp.dev/posts/2020-01-06_cyber_challenge/</guid>
+				<description>&lt;h1 id=&#34;cyberchallengeit-ctf---group-challenge&#34;&gt;CyberChallengeIT CTF - Group Challenge&lt;/h1&gt;&#xA;&lt;p&gt;During the last week of preparation for che Cyber Challenge IT CTF, we were asked to do a CTF&#xA;challenge our self. We were divided in groups and given a month to come up with a challenge.&lt;/p&gt;&#xA;&lt;p&gt;Our group create an easy and guided challenge, since we were required to solve it in one hour. It&#xA;will cover some basic aspect of all the kind of challenges types like Web Security, Reversing,&#xA;Forensics, Cryptography.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

