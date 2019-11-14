@@ -140,15 +140,15 @@ What is CORS  Cross-Origin Resource Sharing (CORS) is a mechanism that uses addi
 
 <p>Eg. <code>example.com admin.example.com</code></p>
 
-<p>The browsers will block all the request cross domain and throw an error. This issue is also present in development, because the server and frontend must be hosted on different ports (Like <code>localhost:8080 localhost:8000</code>).</p>
+<p>The browsers will block all the requests cross-domain and throw an error. This issue is also present in development because the server and frontend must be hosted on different ports (Like <code>localhost:8080</code> and <code>localhost:8000</code>).</p>
 
 <h2 id="implementation">Implementation</h2>
 
-<p>The best place to read the implementation of CORS is <a href="https://developer.mozilla.org/docs/Web/HTTP/CORS">MDN Web docs</a>. Most of the setup on the frontend is done by <strong>fetch</strong>. The first step in the CORS mechanism is a <strong>Preflighted request</strong>.</p>
+<p>The best place to read the implementation of CORS is <a href="https://developer.mozilla.org/docs/Web/HTTP/CORS">MDN Web Docs</a>. Most of the setup on the frontend is done by <strong>fetch</strong>. The first step in the CORS mechanism is a <strong>Preflighted request</strong>.</p>
 
 <h3 id="preflighted-request">Preflighted request</h3>
 
-<p>The <strong>Preflighted request</strong> is an <code>OPTIONS</code> request that check if the backend server understand the necessary headers.</p>
+<p>The <strong>Preflighted request</strong> is an <code>OPTIONS</code> request that checks if the backend server understands the necessary headers.</p>
 
 <p>The headers are:
 - Access-Control-Request-Method
@@ -189,7 +189,7 @@ Origin: https://example.com
 <li>Access-Control-Allow-Headers</li>
 </ul>
 
-<p>This cold be done in two ways. Using a custom Middleware created on your own, for simple testing, or the more complete plugin <a href="https://github.com/barryvdh/laravel-cors">barryvdh/laravel-cors</a></p>
+<p>This could be done in two ways. Using a custom Middleware created on your own, for simple testing, or the more complete plugin <a href="https://github.com/barryvdh/laravel-cors">barryvdh/laravel-cors</a></p>
 
 <p>You can find the implementation of the custom Middleware in this <a href="https://stackoverflow.com/a/33090515">Stack Overflow answer</a>. The code is:</p>
 
@@ -226,11 +226,13 @@ class CORS {
             $response-&gt;header($key, $value);
         return $response;
     }
+}
+
 </code></pre>
 
 <h2 id="issue">Issue</h2>
 
-<p>After adding the Middleware I will had still issues with the request being blocked by the browser. The response to the Preflighted Request had a 200 Status Code, but no CORS headers. After some digging, I found out that Laravels returns an html page if you don&rsquo;t specify a return type of <code>Accept-Content: application/json</code> in the request and it will result in a 302 redirect to the page which will be blocked by default from the browser. So in the fetch function we need to add the request and response content headers:</p>
+<p>After adding the Middleware I had still issues with the request being blocked by the browser. The response to the Preflighted Request had a 200 Status Code, but no CORS headers. After some digging, I found out that Laravels returns an html page if you don&rsquo;t specify a return type of <code>Accept-Content: application/json</code> in the request and it will result in a 302 redirect to the page which will be blocked by default from the browser. So in the fetch function, we need to add the request and response content-type headers:</p>
 
 <p>With the fetch API</p>
 
@@ -250,7 +252,7 @@ class CORS {
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>In conclusion I sudjest to just use the plug-in <a href="https://github.com/barryvdh/laravel-cors">barryvdh/laravel-cors</a> for the better configuration and features.</p>
+<p>In conclusion, I suggest to just use the plug-in <a href="https://github.com/barryvdh/laravel-cors">barryvdh/laravel-cors</a> for the best configuration and features.</p>
 
     </div>
     
