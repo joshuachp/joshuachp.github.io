@@ -4,22 +4,37 @@
   
   <url>
     <loc>https://joshuachp.github.io/</loc>
-    <lastmod>2020-01-06T09:44:30+02:00</lastmod>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshuachp.github.io/writeups/tryhackme-easy-peasy/</loc>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshuachp.github.io/writeups/</loc>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://joshuachp.github.io/posts/ccit-challenge/</loc>
-    <lastmod>2020-01-06T09:44:30+02:00</lastmod>
+    <lastmod>2020-01-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://joshuachp.github.io/posts/</loc>
-    <lastmod>2020-01-06T09:44:30+02:00</lastmod>
+    <lastmod>2020-01-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://joshuachp.github.io/posts/cors-laravel/</loc>
-    <lastmod>2019-10-02T09:44:30+02:00</lastmod>
+    <lastmod>2019-10-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshuachp.github.io/about/</loc>
+    <priority>0</priority>
   </url>
   
   <url>
