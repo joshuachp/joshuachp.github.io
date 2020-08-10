@@ -8,6 +8,21 @@
   </url>
   
   <url>
+    <loc>https://joshuachp.github.io/tags/ctf/</loc>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshuachp.github.io/tags/</loc>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://joshuachp.github.io/tags/thm/</loc>
+    <lastmod>2020-08-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://joshuachp.github.io/writeups/tryhackme-easy-peasy/</loc>
     <lastmod>2020-08-06T00:00:00+00:00</lastmod>
   </url>
@@ -39,10 +54,6 @@
   
   <url>
     <loc>https://joshuachp.github.io/categories/</loc>
-  </url>
-  
-  <url>
-    <loc>https://joshuachp.github.io/tags/</loc>
   </url>
   
 </urlset>

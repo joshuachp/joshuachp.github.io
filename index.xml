@@ -18,7 +18,11 @@
       <pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate>
       
       <guid>https://joshuachp.github.io/writeups/tryhackme-easy-peasy/</guid>
-      <description>This is a writeup.</description>
+      <description>Enumeration First we scan for open ports and services
+Nmap We use nmap with some default arguments.
+sudo nmap -sV -sC -oA nmap/first $IP It will return.
+PORT STATE SERVICE VERSION 80/tcp open http nginx 1.16.1 | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: nginx/1.16.1 |_http-title: Welcome to nginx! From the first scan we can see that port 80 is open with nginx version 1.16.1
+All ports So let&amp;rsquo;s retry for all ports -p- in the background, using -v to increase the verbosity and removing the scripts -sC and version -sV parameters.</description>
     </item>
     
     <item>

