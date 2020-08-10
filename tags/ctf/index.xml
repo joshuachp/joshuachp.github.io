@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>ctf on /dev/blog</title>
+    <title>CTF on /dev/blog</title>
     <link>https://joshuachp.github.io/tags/ctf/</link>
-    <description>Recent content in ctf on /dev/blog</description>
+    <description>Recent content in CTF on /dev/blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>Joshua Chapman</copyright>
