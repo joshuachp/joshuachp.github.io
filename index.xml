@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Index on /dev/blog</title><link>https://joshuachp.github.io/</link><description>Recent content in Index on /dev/blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 03 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://joshuachp.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>TryHackMe - Blue</title><link>https://joshuachp.github.io/writeups/tryhackme-blue/</link><pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-blue/</guid><description>The room link can be found at TryHackMe - Blue
-For this room i will be using the Metasploit framework.
-Recon We begin with an Nmap of the box to see the services and get their version.
+For this room, I will be using the Metasploit framework.
+Recon We begin with a Nmap of the box to see the services and get their version.
 msf5 &amp;gt; db_nmap -sC -sV 10.10.47.219 Now we can see all the running services with the services command.
 msf5 &amp;gt; services Services ======== host port proto name state info ---- ---- ----- ---- ----- ---- 10.</description></item><item><title>TryHackMe - Vulnversity</title><link>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</link><pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</guid><description>The room link can be found at TryHackMe - Vulnversity
 Reconnaissance Nmap First, we do a simple Nmap scan
