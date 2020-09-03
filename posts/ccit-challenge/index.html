@@ -1,0 +1,132 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>/dev/blog/posts/ccit-challenge</title><base href=https://joshuachp.github.io><meta name=description content="An easy and guided CTF Challenge with writeup created for the 2020 CyberChallenge Italy."><link rel=icon type=image/svg+xml href=https://joshuachp.github.io/favicon.svg><link rel=icon type=image/png href=https://joshuachp.github.io/favicon.png><link rel=icon type=image/x-icon href=https://joshuachp.github.io/favicon.ico><link rel=canonical href=https://joshuachp.github.io/posts/ccit-challenge/><link preload href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel=stylesheet><link type=text/css href=https://joshuachp.github.io/main.675ec.css rel=stylesheet></head><body><div class=content><header><div class=header><a href=https://joshuachp.github.io><h1 class=header>/dev/blog</h1></a></div><nav class=header><ul class=header><li class=header><a href=https://joshuachp.github.io/posts>Posts</a></li><li class=header><a href=https://joshuachp.github.io/writeups>Writeups</a></li><li class=header><a href=https://joshuachp.github.io/about>About</a></li></ul></nav></header><main><article><h1>CyberChallengeIT CTF - Group Challenge</h1><p>During the last week of preparation for che Cyber Challenge IT CTF, we were
+asked to do a CTF challenge our self. We were divided in groups and given a
+month to come up with a challenge.</p><p>Our group create an easy and guided challenge, since we were required to solve
+it in one hour. It will cover some basic aspect of all the kind of challenges
+types like Web Security, Reversing, Forensics, Cryptography.</p><p>If you want to try the challenge yourself you will start by downloading this
+zip file:</p><p><a href=/CTF/CCIT_challenge/challenge_gruppo_1.zip>challenge_gruppo_1.zip</a></p><p>Thank you to all the tutors and the other group members which made all the
+different parts of this challenge.</p><p>The source code for creating the challenge: <a href=https://github.com/joshuachp/CTF_CyberChallengeIT_2020>CTF_CyberChallenge</a></p><h1 id=writeup>Writeup</h1><blockquote><p>The challenge was Italy so the writeup is in Italian</p></blockquote><h2 id=start>Start</h2><p>La challenge inizia con uno zip.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>unzip challenge_gruppo_1.zip
+</code></pre></div><p>All&rsquo;interno dello zip troviamo diversi file:</p><ul><li><p><strong>get_flag.py</strong> : script python che una volta fornita la password corretta
+stampa la flag</p></li><li><p><strong>start</strong> : eseguibile per l&rsquo;inizio della challenge</p></li><li><p><strong>stage1.txt</strong> : file di benvenuto</p><p>Osserviamo lo start fare cose (LOL). Alla fine ci indirizza ad un
+<a href=https://joshuachp.github.io/CTF/CCIT_challenge/>sito web</a>.</p></li></ul><h2 id=sito>Sito</h2><p>Accediamo al sito e troviamo che il campo username è vulnerabile a SQLI ber il
+bypass dell&rsquo;autenticazione.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=color:#6ab825;font-weight:700>admin</span><span style=color:#ed9d13>&#39; --
+</span></code></pre></div><p>Questo ci permette di scaricare un file <code>disk</code>.</p><blockquote><p>Il sito non utilizza un database in quanto è una pagina statica. Anche lo se
+lo script è minified, con un po&rsquo; di reversing si può benissimo trovare la
+funzione del download, però non è pratico in quanto per questioni di tempo la
+query è molto semplice.</p></blockquote><h3 id=hint-1>Hint 1</h3><p>Nel source del sito possiamo trovare un commento suggerisce di utilizzare SQL
+Injection.</p><h2 id=disk>Disk</h2><p>Utilizzando il comando <code>file</code> su disk possiamo vedere:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>disk: Linux rev 1.0 ext2 filesystem data, ...
+</code></pre></div><p>Essendo un file-system procediamo quindi a creare una cartella dove eseguire il
+mount</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mkdir mnt
+sudo mount disk mnt
+</code></pre></div><p>Nella cartella <code>mnt</code> troviamo i seguenti file:</p><ul><li><strong>next_stage.txt</strong> : un testo che come all&rsquo;inizio ci indica la strada da
+proseguire.</li><li><strong>helpful.png</strong> : immagine con Clippy che ci lascia un messaggio</li></ul><p>Clippy nel suo messaggio cita un eseguibile di cui fare il reverse engineering,
+però non abbiamo al momento nessun eseguibile.</p><h3 id=hint-2>Hint 2</h3><p>Analizziamo quindi il contenuto del file <code>next_stage.txt</code></p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>strings next_stage.txt
+strings -10 next_stage.txt
+</code></pre></div><p>Notiamo una stringa in base64, decodificata proseguiamo ad analizzarla notando
+che è stato applicato uno shift</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#24909d>echo</span> <span style=color:#ed9d13>&#34;RnIgZnJ2IG95YnBwbmdiIHZhIGdoZ2d2IGRocmZndiBPVkEgY2ViaW4gbiBzbmVndiBoYW4gSk5ZWCA6KQo=&#34;</span> | base64 -d | tr ‘n-za-mN-ZA-M’ ‘a-zA-Z’
+<span style=color:#999;font-style:italic># Oppure se si ha installati bsd_games</span>
+<span style=color:#24909d>echo</span> <span style=color:#ed9d13>&#34;RnIgZnJ2IG95YnBwbmdiIHZhIGdoZ2d2IGRocmZndiBPVkEgY2ViaW4gbiBzbmVndiBoYW4gSk5ZWCA6KQo=&#34;</span> | base64 -d | rot13
+</code></pre></div><p>Unendo le varie informazioni trovate sappiamo che sono stati eliminati dei file
+e ci viene citato <code>binwalk</code>.</p><h3 id=forensics>Forensics</h3><p>Il filesystem mantiene i dati scritti su disco anche dopo l&rsquo;eliminazione dato
+che vengono solo eliminati i nodi e considerato come freespace. Per estrarre i
+dati ci sono vari modi: testdisk, ext-undelete, scalpel&mldr; Noi mostreremo un
+metodo utilizzando binwalk.</p><p>Come suggerito proviamo a utilizzare binwalk su disk per trovare tutti i dati
+contenuti, nelle nuove versioni è necessario utilizzare il tag <code>-b</code>.</p><p>Facendo un prima analisi sul file disk possiamo notare che contiene file di
+estensione nota e che quando abbiamo fatto il mount non erano presenti</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>strings -10 disk | grep -i <span style=color:#ed9d13>&#34;[a-z_]*\.[a-z]*&#34;</span>
+strings | head
+<span style=color:#999;font-style:italic># next_stage.txt</span>
+<span style=color:#999;font-style:italic># sneaky.tar.gz</span>
+<span style=color:#999;font-style:italic># helpful.png</span>
+</code></pre></div><p>Una volta visto l&rsquo;esistenza di un file non presente alla montatura procediamo
+con l&rsquo;estrazione e l&rsquo;analisi dei files utilizzando binwalk con la flag <code>-e</code>.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>binwalk -e -b disk
+<span style=color:#24909d>cd</span> _disk.extracted/
+file *
+tar -xvf <span style=color:#3677a9>7400</span>
+</code></pre></div><p>Il tar contiene i seguenti files:</p><ul><li><strong>final_stage.txt</strong> : testo</li><li><strong>crackme</strong> : eseguibile</li></ul><blockquote><p>Utilizzando lo strumento testdisk è possibile riconoscere il file rimosso, ma
+non è possibile l&rsquo;estrazione</p></blockquote><h3 id=reverse-engineering>Reverse Engineering</h3><p>Analizzando crackme troviamo che dal main viene chiamata una funzione da un
+array di funzioni nominato <code>table</code>. La funzione chiamata è la funzione <code>j</code>, dato
+che viene l&rsquo;indice viene determinato dal calcolo di <code>modular_exponentiation</code>
+sulla base di parametri statici.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++>argv_to_int = atoi(*(<span style=color:#6ab825;font-weight:700>char</span> **)(param_2 + <span style=color:#3677a9>8</span>));
+table_index = modular_exponentiation(<span style=color:#3677a9>3</span>,<span style=color:#3677a9>0x2b</span>,<span style=color:#3677a9>7</span>);
+cVar1 = *(table + (ulong)table_index * <span style=color:#3677a9>8</span>)((ulong)argv_to_int);
+</code></pre></div><p>Proseguendo l&rsquo;analisi della funzione <code>j</code> notiamo che al suo interno chiama una
+funzione di controllo (<code>fourth_check</code>) passando come argomento del binary.
+<code>fourth_check</code> divide il valore che abbiamo inserito in 4 variabili tramite
+operazioni binarie che utilizza poi in un sistema lineare a quattro incognite.
+La funzione <code>j</code> controllerà poi i risultati di questo sistema con i valori
+contenuti in un array inizializzato all&rsquo;interno della procedura.</p><p>Conoscendo tutti questi valori possiamo quindi creare un sistema lineare dove
+poniamo come incognite le quattro parti in cui il nostro valore di ingresso è
+stato diviso e una volta che abbiamo ottenuto il valore andiamo a fare il
+reverse dell&rsquo;operazione di <code>>></code> per ottenere il valore corretto.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>numpy</span> <span style=color:#6ab825;font-weight:700>as</span> <span style=color:#447fcf;text-decoration:underline>np</span>
+<span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>math</span>
+
+<span style=color:#ed9d13>&#34;&#34;&#34; fourth_check() - from ghidra
+</span><span style=color:#ed9d13>uint32_t a = n &amp; 0xFF;
+</span><span style=color:#ed9d13>uint32_t b = (n &gt;&gt; 8) &amp; 0xFF;
+</span><span style=color:#ed9d13>uint32_t c = (n &gt;&gt; 16) &amp; 0xFF;
+</span><span style=color:#ed9d13>uint32_t d = (n &gt;&gt; 24) &amp; 0xFF;
+</span><span style=color:#ed9d13>
+</span><span style=color:#ed9d13>uint32_t v1 = &#39;J&#39; * a + &#39;o&#39; * b + &#39;j&#39; * c + &#39;o&#39; * d;
+</span><span style=color:#ed9d13>uint32_t v2 = &#39;D&#39; * a + &#39;I&#39; * b + &#39;O&#39; * c + &#39;!&#39; * d;
+</span><span style=color:#ed9d13>uint32_t v3 = &#39;Z&#39; * a + &#39;A&#39; * b + &#39;W&#39; * c + &#39;A&#39; * d;
+</span><span style=color:#ed9d13>uint32_t v4 = &#39;R&#39; * a + &#39;U&#39; * b + &#39;D&#39; * c + &#39;O&#39; * d;
+</span><span style=color:#ed9d13>
+</span><span style=color:#ed9d13>uint32_t vals[4] = {61319, 38111, 48787, 48939};
+</span><span style=color:#ed9d13>&#34;&#34;&#34;</span>
+
+<span style=color:#6ab825;font-weight:700>def</span> <span style=color:#447fcf>char_to_str</span>(chrs):
+<span style=color:#6ab825;font-weight:700>return</span> [<span style=color:#24909d>ord</span>(c) <span style=color:#6ab825;font-weight:700>for</span> c <span style=color:#6ab825;font-weight:700>in</span> chrs]
+
+incognite = np.array([char_to_str(<span style=color:#ed9d13>&#34;Jojo&#34;</span>), char_to_str(<span style=color:#ed9d13>&#34;DIO!&#34;</span>), char_to_str(<span style=color:#ed9d13>&#34;ZAWA&#34;</span>), char_to_str(<span style=color:#ed9d13>&#34;RUDO&#34;</span>)])
+valori = np.array([<span style=color:#3677a9>61319</span>, <span style=color:#3677a9>38111</span>, <span style=color:#3677a9>48787</span>, <span style=color:#3677a9>48939</span>])
+risultato = np.linalg.solve(incognite, valori)
+<span style=color:#6ab825;font-weight:700>print</span>(<span style=color:#ed9d13>&#34;Values are: {}&#34;</span>.format(risultato)) <span style=color:#999;font-style:italic># Values are: [198.  96. 146. 185.]</span>
+
+values = [<span style=color:#3677a9>198</span>, <span style=color:#3677a9>96</span>, <span style=color:#3677a9>146</span>, <span style=color:#3677a9>185</span>]
+values.reverse()
+binary = [<span style=color:#ed9d13>&#34;{0:08b}&#34;</span>.format(b) <span style=color:#6ab825;font-weight:700>for</span> b <span style=color:#6ab825;font-weight:700>in</span> values]
+<span style=color:#6ab825;font-weight:700>print</span>(<span style=color:#ed9d13>&#34;Value: {}&#34;</span>.format(<span style=color:#24909d>int</span>(<span style=color:#ed9d13>&#34;&#34;</span>.join(binary), <span style=color:#3677a9>2</span>))) <span style=color:#999;font-style:italic># 3113377990</span>
+</code></pre></div><p>Eseguiamo quindi crackme passando come parametro il valore calcolato e otteniamo
+un HASH(SHA2).</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>./crackme <span style=color:#3677a9>3113377990</span>
+<span style=color:#999;font-style:italic># 0051377D1EE813EBFB59991D9165D88EC8C28C51AB37268A01DE386D00AE873AE34051D74CEEF2E457AB2D06BF283BEE87D0A209242B004DC27892DA6DB1AE1C</span>
+</code></pre></div><h4 id=hint-3>Hint 3</h4><p>Nell&rsquo;eseguibile viene eseguito un controllo tra la stringa &ldquo;stuck&rdquo; e una
+variabile di nome <code>hint</code>. Se andiamo a controllare il valore della variabile, ci
+consiglia di trovare dinamicamente la funzione chiamata dal main o di cambiare
+il tipo della variabile <code>table</code> in un array di funzioni per capire quale di
+queste chiami. La stringa la possiamo notare eseguendo strings del nostro
+eseguibile.</p><h3 id=steganography>Steganography</h3><p>Consideriamo l&rsquo;immagine <code>helpful.png</code></p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>strings helpful.png
+<span style=color:#999;font-style:italic># at Least you&#39;re putting Significant effort into this challenge</span>
+</code></pre></div><p>Dato il suggerimento proviamo a vedere se abbiamo qualcosa nei
+<a href=https://www.boiteaklou.fr/Steganography-Least-Significant-Bit.html>bit meno significativi</a>.
+Utilizzando il codice fornito all&rsquo;interno della pagina web otteniamo il nostro
+messaggio nascosto.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#6ab825;font-weight:700>import</span> <span style=color:#447fcf;text-decoration:underline>base64</span>
+<span style=color:#6ab825;font-weight:700>from</span> <span style=color:#447fcf;text-decoration:underline>PIL</span> <span style=color:#6ab825;font-weight:700>import</span> Image
+
+image = Image.open(<span style=color:#ed9d13>&#34;./helpful.png&#34;</span>)
+extracted = <span style=color:#ed9d13>&#39;&#39;</span>
+pixels = image.load()
+<span style=color:#6ab825;font-weight:700>for</span> x <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#24909d>range</span>(<span style=color:#3677a9>0</span>,image.width):
+r,g,b = pixels[x,<span style=color:#3677a9>0</span>]
+extracted += <span style=color:#24909d>bin</span>(r)[-<span style=color:#3677a9>1</span>]
+extracted += <span style=color:#24909d>bin</span>(g)[-<span style=color:#3677a9>1</span>]
+extracted += <span style=color:#24909d>bin</span>(b)[-<span style=color:#3677a9>1</span>]
+
+chars = []
+<span style=color:#6ab825;font-weight:700>for</span> i <span style=color:#6ab825;font-weight:700>in</span> <span style=color:#24909d>range</span>(<span style=color:#24909d>len</span>(extracted)//<span style=color:#3677a9>8</span>):
+byte = extracted[(i*<span style=color:#3677a9>8</span>):(i+<span style=color:#3677a9>1</span>)*<span style=color:#3677a9>8</span>]
+chars.append(<span style=color:#24909d>chr</span>(<span style=color:#24909d>int</span>(<span style=color:#ed9d13>&#39;&#39;</span>.join([<span style=color:#24909d>str</span>(bit) <span style=color:#6ab825;font-weight:700>for</span> bit <span style=color:#6ab825;font-weight:700>in</span> byte]), <span style=color:#3677a9>2</span>)))
+
+flag = <span style=color:#ed9d13>&#39;&#39;</span>.join(chars)
+<span style=color:#6ab825;font-weight:700>print</span>(flag) <span style=color:#999;font-style:italic># This website might help you a lot: https://ecavicc.github.io/cyberchallenge/</span>
+</code></pre></div><blockquote><p>Un altro tool più popolare da utilizzabile è zsteg in ruby per ricavare
+direttamente il base64</p></blockquote><h3 id=cracking>Cracking</h3><p>Andiamo a forzare l&rsquo;hash che abbiamo ottenuto dall&rsquo;eseguibile per ottenere la
+password che ci permetterà di ottenere la flag. Per crackare l&rsquo;hash andremo a
+utilizzare hashcat fornendo una wordlist, si può anche trovare la soluzione su
+<a href=https://crackstation.net/>CrackStation</a></p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>hashcat -a <span style=color:#3677a9>0</span> -m <span style=color:#3677a9>1700</span> <span style=color:#24909d>hash</span> rockyou.txt
+<span style=color:#999;font-style:italic># Mr.Pickles</span>
+</code></pre></div><h4 id=hint-4>Hint 4</h4><p>Il sito che abbiamo estratto dall&rsquo;immagine contiene il simbolo # e un gattino
+da qui possiamo collegare i due elementi e ottenere <code>hashcat</code>. Inoltre il link
+presente infondo alla pagina, che porta alla canzione We Will Rock You, vuole
+essere un suggerimento a utilizzare una wordlist di supporto.</p><h2 id=conclusione>Conclusione</h2><p>Eseguiamo il file python per ottenere la flag</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#24909d>echo</span> <span style=color:#ed9d13>&#34;Mr.Pickles&#34;</span> &gt; passwd
+python3 get_flag.py &lt; passwd
+</code></pre></div><p><code>FLAG{i_7urn3d_mys31f_i1n70_4_pick13}</code></p><h2 id=extras>Extras</h2><p>Piccoli easter-egg presenti nella sfida :smile:</p><ul><li><strong>Forgot Password</strong>: premere più volte <code>forget password</code> potrebbe aiutare.</li><li><strong>Copy Pasta</strong>: Crackme potrebbe esprimersi su Rick & Morty.</li><li><strong>Hello There</strong>: Il sito nascosto da Clippy - con un gran icona - potrebbe
+avere un saluto altrettanto nascosto.</li></ul></article></main><footer></footer></div><script async src=https://joshuachp.github.io/main.675ec.js></script></body></html>
