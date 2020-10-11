@@ -1,0 +1,42 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>/dev/blog/writeups/reply-challenges-2020-that-is-what-server-says</title><base href=https://joshuachp.github.io><meta name=description content="Writeup for the 300 points Web challenge for Reply Challenge CTF"><link rel=icon type=image/svg+xml href=https://joshuachp.github.io/favicon.svg><link rel=icon type=image/png href=https://joshuachp.github.io/favicon.png><link rel=icon type=image/x-icon href=https://joshuachp.github.io/favicon.ico><link rel=canonical href=https://joshuachp.github.io/writeups/reply-challenges-2020-that-is-what-server-says/><link preload href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel=stylesheet><link type=text/css href=https://joshuachp.github.io/main.832af.css rel=stylesheet></head><body><div class=content><header><div class=header><a href=https://joshuachp.github.io><h1 class=header>/dev/blog</h1></a></div><nav class=header><ul class=header><li class=header><a href=https://joshuachp.github.io/posts>Posts</a></li><li class=header><a href=https://joshuachp.github.io/writeups>Writeups</a></li><li class=header><a href=https://joshuachp.github.io/about>About</a></li></ul></nav></header><main><article><h1>Reply Challenge 2020 - That's what what server says</h1><p>This is the Writeup for the 300 points Web challenge for Reply Challenge CTF.
+During the CTF me and my team achieved first blood on this challenge. The
+challenge consists in finding a service end point on a web page, with a login
+API. Then you have to exploit an <strong>XXE</strong> (XML External Entities) Injection to get a
+<strong>LFI</strong> (Local File Inclusion) to get the sysadmin credentials to login on the
+service and get the flag.</p><h2 id=service-discovery>Service discovery</h2><p>Fist we land on a page with just a <code>&lt;h1></code> title and an <code>&lt;img></code>. The title talks
+about <strong>robots</strong> and the in the image there are some blackberries. So as they
+hinted we navigate to the <code>/robots.txt</code> files to find if there are some
+disallowed entries. We are greeted by the character Michael from The Office
+saying <em>&ldquo;You&rsquo;re not my friend Barry&rdquo;</em>.</p><h3 id=user-agent>User Agent</h3><p>Since the <code>roots.txt</code> file is blocked and there is anything else on the main
+page, we have to circumvent the check on this file. They hinted us something
+about berries or blackberries. So we can try to accessing the <code>robots.txt</code> as a
+BlackBerry phone. This can be done by changing the <code>User-Agent</code> header of your
+http request. We can find a list of valid <code>User-Agent</code> string on
+<a href="http://www.useragentstring.com/pages/useragentstring.php?name=BlackBerry">this website</a>.
+After we changed the <code>User-agent</code> we revisit the page and now we can see a
+disallowed entry <code>/file_upload.php</code>.</p><p><img src=/images/reply-challenges/robots.png alt=robots.txt></p><h3 id=file-upload>File Upload</h3><p>The <code>file_upload.php</code> API permits us to upload a <code>[png, jpg, jpeg, gif]</code> file to
+the machine and will return where the file was uploaded.</p><blockquote><p>Spoiler: we never use the uploaded file (revshell or other) probably was a
+rabbit hole.</p></blockquote><p>There are two curious facts about this API. The first is that the <code>POST</code> request
+has sends three values:</p><ul><li><strong>fileToUpload</strong>: The file to upload and its filename</li><li><strong>req</strong>: A string that represents and endpoint on the server</li><li><strong>submit</strong>: A request method (POST)</li></ul><p>The second one is when you send the request without uploading a file, you get a
+message to contact the sysadmin to use the API <code>/services</code> and set the
+<code>authorized.xml</code> file.</p><p><img src=/images/reply-challenges/sysadmin.png alt=sysadmin></p><h2 id=exploitation>Exploitation</h2><p>We can not access the <code>/services</code> from our machine, so we can try to use
+<code>file_upload.php</code> to comunicate to this API. First we can try to change the
+<code>req</code> value to <code>/services</code> and check what we get back. Sending an image we get
+that the page doesn&rsquo;t support this method. Then we change the <code>submit</code> value to
+<code>GET</code>. The page responds with an HTML/XML body. This is <strong>XML WSDL</strong> a standard
+for Web Services Description Language, it is used to describe web services.</p><p><img src=/images/reply-challenges/services.png alt=/services></p><p>We can see that the services has an endpoint at <code>/services/perform_login</code>
+requires as input a <code>user</code> and a <code>pwd</code> that is probably the one in the
+<code>authorized.xml</code> referenced before.</p><h3 id=xxe-injection>XXE Injection</h3><p>We can now try to send the file to the login API. If we send an image the
+endpoint returns <code>XML Format Error</code>, so we know that the page requires an XML
+file. Unfortunately <code>file_upload.php</code> only accepts certain extension, we need to
+craft or XML payload and rename the file to a valid extension like <code>.jpg</code>.</p><p>From the XML WSDL we know the arguments that are required and with a bit of
+trial and error we can find the right format of the payload.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#6ab825;font-weight:700>&lt;user&gt;</span>test<span style=color:#6ab825;font-weight:700>&lt;/user&gt;</span>
+</code></pre></div><p>When we send the post we get an error saying:</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>test is not a register user 
+</code></pre></div><p>Now we have a value <code>user</code> that can output on the response. This means we can
+make a XXE Injection get get the <code>authorized.xml</code> file as the user value and
+make the response print it as an error for profit. We can guess the position of
+the file because the response includes where our image was uploaded, or we could
+try and get the entire directory, or a known file like <code>/etc/passwd</code>.</p><p>The final payload is the following.</p><div class=highlight><pre style=color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml><span style=color:#cd2828;font-weight:700>&lt;!DOCTYPE root [!ENTITY test SYSTEM &#39;file:///var/chall300_web/authorized.xml&#39;&gt;</span>]&gt;
+<span style=color:#6ab825;font-weight:700>&lt;user&gt;</span>&amp;test;<span style=color:#6ab825;font-weight:700>&lt;/user&gt;</span>
+</code></pre></div><p><img src=/images/reply-challenges/flag.png alt=flag></p><blockquote><p>If you want to read more about XXE here <a href=https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XXE%20Injection>PayloadAllTheThings/XXE Injection</a></p></blockquote></article></main><footer><span>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</span>
+<a href=https://joshuachp.github.io/index.xml>Atom feed</a></footer></div><script async src=https://joshuachp.github.io/main.832af.js></script></body></html>
