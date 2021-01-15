@@ -1,8 +1,48 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on /dev/blog</title><link>https://joshuachp.github.io/tags/ctf/</link><description>Recent content in CTF on /dev/blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright><lastBuildDate>Sat, 10 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://joshuachp.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>Reply Challenge 2020 - That's what server says</title><link>https://joshuachp.github.io/writeups/reply-challenges-2020-that-is-what-server-says/</link><pubDate>Sat, 10 Oct 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/reply-challenges-2020-that-is-what-server-says/</guid><description>This is the Writeup for the 300 points Web challenge for Reply Challenge CTF. During the CTF I and my team achieved first blood on this challenge. The challenge consists of finding a service endpoint on a web page, with a login API. Then you have to exploit an XXE (XML External Entities) Injection to get an LFI (Local File Inclusion) to get the sysadmin credentials to login on the service and get the flag.</description></item><item><title>TryHackMe - Blue</title><link>https://joshuachp.github.io/writeups/tryhackme-blue/</link><pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-blue/</guid><description>The room link can be found at TryHackMe - Blue
-For this room, I will be using the Metasploit framework.
-Recon We begin with a Nmap of the box to see the services and get their version.
-msf5 &amp;gt; db_nmap -sC -sV 10.10.47.219 Now we can see all the running services with the services command.
-msf5 &amp;gt; services Services ======== host port proto name state info ---- ---- ----- ---- ----- ---- 10.</description></item><item><title>TryHackMe - Vulnversity</title><link>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</link><pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</guid><description>The room link can be found at TryHackMe - Vulnversity
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CTF on /dev/blog</title><link>https://joshuachp.github.io/tags/ctf/</link><description>Recent content in CTF on /dev/blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.</copyright><lastBuildDate>Sat, 10 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://joshuachp.github.io/tags/ctf/index.xml" rel="self" type="application/rss+xml"/><item><title>Reply Challenge 2020 - That's what server says</title><link>https://joshuachp.github.io/writeups/reply-challenges-2020-that-is-what-server-says/</link><pubDate>Sat, 10 Oct 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/reply-challenges-2020-that-is-what-server-says/</guid><description>This is the Writeup for the 300 points Web challenge for Reply Challenge CTF. During the CTF I and my team achieved first blood on this challenge. The challenge consists of finding a service endpoint on a web page, with a login API. Then you have to exploit an XXE (XML External Entities) Injection to get an LFI (Local File Inclusion) to get the sysadmin credentials to login on the service and get the flag.</description></item><item><title>TryHackMe - Blue</title><link>https://joshuachp.github.io/writeups/tryhackme-blue/</link><pubDate>Thu, 03 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-blue/</guid><description>&lt;blockquote>
+&lt;p>The room link can be found at
+&lt;a href="https://tryhackme.com/room/blue">TryHackMe - Blue&lt;/a>&lt;/p>
+&lt;/blockquote>
+&lt;p>For this room, I will be using the Metasploit framework.&lt;/p>
+&lt;h2 id="recon">Recon&lt;/h2>
+&lt;p>We begin with a Nmap of the box to see the services and get their version.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">msf5 &amp;gt; db_nmap -sC -sV 10.10.47.219
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now we can see all the running services with the &lt;code>services&lt;/code> command.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">msf5 &amp;gt; services
+&lt;span style="color:#40ffff">Services&lt;/span>
+========
+host port proto name state info
+---- ---- ----- ---- ----- ----
+10.10.47.219 &lt;span style="color:#3677a9">135&lt;/span> tcp msrpc open Microsoft Windows RPC
+10.10.47.219 &lt;span style="color:#3677a9">139&lt;/span> tcp netbios-ssn open Microsoft Windows netbios-ssn
+10.10.47.219 &lt;span style="color:#3677a9">445&lt;/span> tcp microsoft-ds open Windows &lt;span style="color:#3677a9">7&lt;/span> Professional &lt;span style="color:#3677a9">7601&lt;/span> Service Pack &lt;span style="color:#3677a9">1&lt;/span> microsoft-ds workgroup: WORKGROUP
+10.10.47.219 &lt;span style="color:#3677a9">3389&lt;/span> tcp ssl/ms-wbt-server open
+10.10.47.219 &lt;span style="color:#3677a9">49152&lt;/span> tcp msrpc open Microsoft Windows RPC
+10.10.47.219 &lt;span style="color:#3677a9">49153&lt;/span> tcp msrpc open Microsoft Windows RPC
+10.10.47.219 &lt;span style="color:#3677a9">49154&lt;/span> tcp msrpc open Microsoft Windows RPC
+10.10.47.219 &lt;span style="color:#3677a9">49158&lt;/span> tcp msrpc open Microsoft Windows RPC
+10.10.47.219 &lt;span style="color:#3677a9">49160&lt;/span> tcp msrpc open Microsoft Windows RPC
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>On this machine, we will focus on the &lt;strong>SMB&lt;/strong> service which is on port &lt;code>445&lt;/code>.&lt;/p>
+&lt;p>We can gather more information using the module
+&lt;code>auxiliary/scanner/smb/smb_version&lt;/code>. Running it the services page will lock more
+like this.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">10.10.47.219 &lt;span style="color:#3677a9">445&lt;/span> tcp smb open Windows &lt;span style="color:#3677a9">7&lt;/span> Professional SP1 (build:7601) (name:JON-PC) (workgroup:WORKGROUP ) (signatures:optional)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Also we run &lt;code>auxiliary/scanner/smb/smb1&lt;/code> to check if the box has support for
+SMBv1.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">msf5 auxiliary(scanner/smb/smb1) &amp;gt; run
+[+] 10.10.47.219:445 - 10.10.47.219 supports SMBv1 dialect.
+[*] 10.10.47.219:445 - Scanned &lt;span style="color:#3677a9">1&lt;/span> of &lt;span style="color:#3677a9">1&lt;/span> hosts (100% &lt;span style="color:#24909d">complete&lt;/span>)
+[*] Auxiliary module execution completed
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>As the machine name implies the box could be exploitable via &lt;strong>EternalBlue&lt;/strong>.
+Since the machine has &lt;strong>Windows 7&lt;/strong> installed and &lt;strong>SMBv1&lt;/strong> enabled, it is most
+likely vulnerable. You can read more here
+&lt;a href="https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2017/ms17-010">Microsoft - EternalBlue&lt;/a>.&lt;/p>
+&lt;p>We can check if the machine is vulnerable by running the module
+&lt;code>auxiliary/scanner/smb/smb_ms17_010&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre style="color:#d0d0d0;background-color:#202020;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">msf5 auxiliary(scanner/smb/smb_ms17_010) &amp;gt; run
+[+] 10.10.47.219:445 - Host is likely VULNERABLE to MS17-010! - Windows &lt;span style="color:#3677a9">7&lt;/span> Professional &lt;span style="color:#3677a9">7601&lt;/span> Service Pack &lt;span style="color:#3677a9">1&lt;/span> x64 (64-bit)
+[*] 10.10.47.219:445 - Scanned &lt;span style="color:#3677a9">1&lt;/span> of &lt;span style="color:#3677a9">1&lt;/span> hosts (100% &lt;span style="color:#24909d">complete&lt;/span>)
+[*] Auxiliary module execution completed
+&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>TryHackMe - Vulnversity</title><link>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</link><pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-vulnversity/</guid><description>The room link can be found at TryHackMe - Vulnversity
 Reconnaissance Nmap First, we do a simple Nmap scan
 PORT STATE SERVICE 21/tcp open ftp 22/tcp open ssh 139/tcp open netbios-ssn 445/tcp open microsoft-ds 3128/tcp open squid-http 3333/tcp open dec-notes We find six ports open, we can now make a more in-depth scan with nmap -sC -sV $IP. It will found the service type and version.
 PORT STATE SERVICE VERSION 21/tcp open ftp vsftpd 3.</description></item><item><title>TryHackMe - Easy Peasy</title><link>https://joshuachp.github.io/writeups/tryhackme-easy-peasy/</link><pubDate>Thu, 06 Aug 2020 00:00:00 +0000</pubDate><guid>https://joshuachp.github.io/writeups/tryhackme-easy-peasy/</guid><description>The room link can be found at TryHackMe - Easy Peasy
